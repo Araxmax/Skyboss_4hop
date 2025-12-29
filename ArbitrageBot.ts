@@ -1,10 +1,11 @@
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair } from "@solana/web3.js";
 import fs from "fs";
 import Decimal from "decimal.js";
 import * as dotenv from "dotenv";
 import { SwapExecutor } from "./SwapExecutor";
 import { SignalManager, ParsedSignal } from "./SignalManager";
 import { SafetyChecker } from "./SafetyChecker";
+import { SOL_MINT, USDC_MINT } from "./constants";
 
 dotenv.config();
 
@@ -160,9 +161,6 @@ class ArbitrageBot {
 
       // Step 3: Execute arbitrage (LIVE MODE)
       console.log("\n[LIVE] Executing real arbitrage trade...");
-
-      const SOL_MINT = "So11111111111111111111111111111111111111112";
-      const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
       const result = await this.swapExecutor.executeArbitrage(
         signal.pool1Address,

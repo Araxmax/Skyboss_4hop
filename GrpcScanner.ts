@@ -4,6 +4,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import Decimal from 'decimal.js';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
+import { PREDEFINED_POOLS, MIN_PROFIT_THRESHOLD, DECIMAL_2_POW_64, DECIMAL_10_POW_9, DECIMAL_10_POW_6 } from './constants';
 
 dotenv.config();
 
@@ -15,21 +16,8 @@ const HELIUS_GRPC_ENDPOINT = process.env.HELIUS_GRPC_ENDPOINT || 'laserstream-ma
 const HELIUS_API_KEY = process.env.HELIUS_API_KEY || '';
 const RPC_URL = process.env.RPC_URL || '';
 
-// Pool addresses
-const POOLS = [
-  {
-    name: "SOL/USDC 0.05% [VERIFIED]",
-    address: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
-    fee_rate: 0.0005,
-  },
-  {
-    name: "SOL/USDC 0.01% [VERIFIED]",
-    address: "83v8iPyZihDEjDdY8RdZddyZNyUtXngz69Lgo9Kt5d6d",
-    fee_rate: 0.0001,
-  },
-];
-
-const MIN_PROFIT_THRESHOLD = new Decimal("0.00001"); // 0.001%
+const POOLS = PREDEFINED_POOLS;
+const MIN_PROFIT_THRESHOLD_DECIMAL = new Decimal(MIN_PROFIT_THRESHOLD);
 
 /* =========================
    HELIUS GRPC CLIENT
@@ -38,6 +26,8 @@ const MIN_PROFIT_THRESHOLD = new Decimal("0.00001"); // 0.001%
 class HeliusGrpcScanner {
   private connection: Connection;
   private poolPrices: Map<string, Decimal>;
+  private pollingInterval: NodeJS.Timeout | null = null;
+  private isRunning: boolean = false;
 
   constructor() {
     this.connection = new Connection(RPC_URL, 'confirmed');
@@ -56,39 +46,47 @@ class HeliusGrpcScanner {
   }
 
   /**
-   * Convert sqrt price X64 to regular price
+   * Convert sqrt price X64 to regular price (optimized)
    */
   private sqrtPriceToPrice(sqrtPriceX64: bigint): Decimal {
-    const sqrtPrice = new Decimal(sqrtPriceX64.toString()).div(new Decimal(2).pow(64));
+    const sqrtPrice = new Decimal(sqrtPriceX64.toString()).div(DECIMAL_2_POW_64);
     const price = sqrtPrice.pow(2);
-    return price.mul(new Decimal(10).pow(9)).div(new Decimal(10).pow(6));
+    return price.mul(DECIMAL_10_POW_9).div(DECIMAL_10_POW_6);
   }
 
   /**
-   * Fetch current pool prices via HTTP RPC
+   * Fetch current pool prices via HTTP RPC (batched for performance)
    */
   async fetchPoolPrices(): Promise<void> {
-    console.log('\n[gRPC] Fetching initial pool prices...');
+    console.log('\n[gRPC] Fetching pool prices...');
 
-    for (const pool of POOLS) {
-      try {
-        const accountInfo = await this.connection.getAccountInfo(
-          new PublicKey(pool.address)
-        );
-
+    // Batch RPC calls for better performance
+    const poolPublicKeys = POOLS.map(p => new PublicKey(p.address));
+    
+    try {
+      const accountInfos = await this.connection.getMultipleAccountsInfo(poolPublicKeys);
+      
+      for (let i = 0; i < POOLS.length; i++) {
+        const pool = POOLS[i];
+        const accountInfo = accountInfos[i];
+        
         if (!accountInfo || !accountInfo.data) {
           console.error(`[gRPC] Failed to fetch pool: ${pool.name}`);
           continue;
         }
 
-        const sqrtPriceX64 = this.decodeSqrtPrice(accountInfo.data);
-        const price = this.sqrtPriceToPrice(sqrtPriceX64);
+        try {
+          const sqrtPriceX64 = this.decodeSqrtPrice(accountInfo.data);
+          const price = this.sqrtPriceToPrice(sqrtPriceX64);
 
-        this.poolPrices.set(pool.address, price);
-        console.log(`[gRPC] ${pool.name}: $${price.toFixed(6)}`);
-      } catch (error: any) {
-        console.error(`[gRPC] Error fetching ${pool.name}:`, error.message);
+          this.poolPrices.set(pool.address, price);
+          console.log(`[gRPC] ${pool.name}: $${price.toFixed(6)}`);
+        } catch (error: any) {
+          console.error(`[gRPC] Error processing ${pool.name}:`, error.message);
+        }
       }
+    } catch (error: any) {
+      console.error(`[gRPC] Error fetching pool prices:`, error.message);
     }
   }
 
@@ -148,7 +146,7 @@ class HeliusGrpcScanner {
     console.log(`  Net Profit: ${profitPct.mul(100).toFixed(4)}%`);
 
     // Check if profitable
-    if (profitPct.gte(MIN_PROFIT_THRESHOLD)) {
+    if (profitPct.gte(MIN_PROFIT_THRESHOLD_DECIMAL)) {
       console.log(`\n[✓] PROFITABLE OPPORTUNITY DETECTED!`);
       console.log(`  Direction: ${direction}`);
       console.log(`  Profit: ${profitPct.mul(100).toFixed(4)}%`);
@@ -165,7 +163,7 @@ class HeliusGrpcScanner {
       fs.writeFileSync('signal.json', JSON.stringify(signal, null, 2));
       console.log(`[✓] Signal written to signal.json`);
     } else {
-      console.log(`  [×] Not profitable (threshold: ${MIN_PROFIT_THRESHOLD.mul(100).toFixed(4)}%)`);
+      console.log(`  [×] Not profitable (threshold: ${MIN_PROFIT_THRESHOLD_DECIMAL.mul(100).toFixed(4)}%)`);
     }
   }
 
@@ -183,6 +181,8 @@ class HeliusGrpcScanner {
     console.log(`Monitoring ${POOLS.length} pools`);
     console.log('='.repeat(70));
 
+    this.isRunning = true;
+
     // Initial fetch
     await this.fetchPoolPrices();
     this.checkArbitrage();
@@ -193,7 +193,11 @@ class HeliusGrpcScanner {
     console.log('[gRPC] Checking every 2 seconds for updates...');
     console.log('[gRPC] Press Ctrl+C to stop\n');
 
-    setInterval(async () => {
+    // Use proper interval management with cleanup
+    this.pollingInterval = setInterval(async () => {
+      if (!this.isRunning) {
+        return;
+      }
       try {
         await this.fetchPoolPrices();
         this.checkArbitrage();
@@ -201,6 +205,18 @@ class HeliusGrpcScanner {
         console.error('[gRPC] Error:', error.message);
       }
     }, 2000); // Check every 2 seconds
+  }
+
+  /**
+   * Stop the scanner and cleanup resources
+   */
+  stop(): void {
+    this.isRunning = false;
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = null;
+    }
+    console.log('[gRPC] Scanner stopped and resources cleaned up');
   }
 
   /**
@@ -224,20 +240,28 @@ class HeliusGrpcScanner {
 
 async function main() {
   try {
-    const scanner = new HeliusGrpcScanner();
-    await scanner.start();
+    scannerInstance = new HeliusGrpcScanner();
+    await scannerInstance.start();
 
     // Keep running
     await new Promise(() => {});
   } catch (error: any) {
     console.error('Fatal error:', error.message);
+    if (scannerInstance) {
+      scannerInstance.stop();
+    }
     process.exit(1);
   }
 }
 
 // Handle graceful shutdown
+let scannerInstance: HeliusGrpcScanner | null = null;
+
 process.on('SIGINT', () => {
   console.log('\n\n[gRPC] Shutting down...');
+  if (scannerInstance) {
+    scannerInstance.stop();
+  }
   process.exit(0);
 });
 

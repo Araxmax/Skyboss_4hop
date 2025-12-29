@@ -68,9 +68,44 @@ OPTIMAL_PROFIT_THRESHOLD = Decimal("0.0001")  # 0.01% optimal profit
 # ==============================
 # WHIRLPOOL DECODER
 # ==============================
+def get_vault_balances_batch(vault_addresses: list, is_usdc_flags: list) -> list:
+    """
+    Batch fetch vault balances using concurrent requests for better performance.
+    Returns list of balance dicts in same order as input.
+    """
+    if not vault_addresses:
+        return []
+    
+    try:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        
+        def fetch_single(addr, is_usdc):
+            return get_vault_balance(addr, is_usdc)
+        
+        # Use thread pool for parallel requests
+        results = [None] * len(vault_addresses)
+        with ThreadPoolExecutor(max_workers=min(10, len(vault_addresses))) as executor:
+            futures = {
+                executor.submit(fetch_single, addr, flag): i 
+                for i, (addr, flag) in enumerate(zip(vault_addresses, is_usdc_flags))
+            }
+            
+            for future in as_completed(futures):
+                idx = futures[future]
+                try:
+                    results[idx] = future.result()
+                except Exception:
+                    results[idx] = {"raw": 0, "display": 0.0, "token": "USDC" if is_usdc_flags[idx] else "SOL"}
+        
+        return results
+    except Exception:
+        # Fallback to sequential calls if concurrent fails
+        return [get_vault_balance(addr, flag) for addr, flag in zip(vault_addresses, is_usdc_flags)]
+
+
 def get_vault_balance(vault_address: str, is_usdc: bool = False) -> dict:
     """
-    Get the balance of a vault account.
+    Get the balance of a vault account (fallback for single calls).
     For SOL vaults: Returns lamports balance (native SOL)
     For USDC vaults: Returns token account balance (SPL tokens)
     """
@@ -100,7 +135,7 @@ def sqrt_price_to_price(sqrt_price_x64: int) -> Decimal:
     return price * Decimal(10**9) / Decimal(10**6)
 
 def decode_whirlpool(pool_pubkey: str):
-    """Decode whirlpool account data (fallback method)"""
+    """Decode whirlpool account data"""
     resp = client.get_account_info(Pubkey.from_string(pool_pubkey))
     if not resp.value:
         raise RuntimeError("Failed to fetch Whirlpool account")
@@ -220,6 +255,35 @@ def main():
     print("\n[OK] Loading PREDEFINED pools ONLY (Auto-discovery DISABLED)")
     print(f"[OK] Using {len(PREDEFINED_POOLS)} manually verified pool(s)\n")
 
+    # Batch fetch all vault balances for better performance
+    all_vault_addresses = []
+    all_is_usdc_flags = []
+    for predefined in PREDEFINED_POOLS:
+        all_vault_addresses.extend([predefined["vault_a"], predefined["vault_b"]])
+        all_is_usdc_flags.extend([False, True])
+    
+    vault_balances = get_vault_balances_batch(all_vault_addresses, all_is_usdc_flags)
+    vault_idx = 0
+    
+    # Fetch pool accounts concurrently
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    
+    pool_data_cache = {}
+    
+    def fetch_pool_data(predefined):
+        try:
+            info = decode_whirlpool(predefined["address"])
+            return predefined["address"], info
+        except Exception as e:
+            return predefined["address"], None
+    
+    with ThreadPoolExecutor(max_workers=len(PREDEFINED_POOLS)) as executor:
+        futures = {executor.submit(fetch_pool_data, p): p for p in PREDEFINED_POOLS}
+        for future in as_completed(futures):
+            addr, info = future.result()
+            if info:
+                pool_data_cache[addr] = info
+    
     for predefined in PREDEFINED_POOLS:
         try:
             print(f"[LOADING] {predefined['name']}")
@@ -227,13 +291,18 @@ def main():
             print(f"  Vault A (SOL): {predefined['vault_a']}")
             print(f"  Vault B (USDC): {predefined['vault_b']}")
             
-            vault_a_info = get_vault_balance(predefined["vault_a"], is_usdc=False)
-            vault_b_info = get_vault_balance(predefined["vault_b"], is_usdc=True)
+            # Use batched vault balances
+            vault_a_info = vault_balances[vault_idx]
+            vault_b_info = vault_balances[vault_idx + 1]
+            vault_idx += 2
             
             print(f"  Vault A Balance: {vault_a_info['display']:,.4f} {vault_a_info['token']}")
             print(f"  Vault B Balance: {vault_b_info['display']:,.4f} {vault_b_info['token']}")
             
-            info = decode_whirlpool(predefined["address"])
+            # Use cached pool data
+            info = pool_data_cache.get(predefined["address"])
+            if not info:
+                raise RuntimeError("Failed to fetch pool account")
             
             pools_data.append({
                 "address": predefined["address"],

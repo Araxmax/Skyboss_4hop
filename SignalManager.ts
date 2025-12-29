@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import Decimal from "decimal.js";
+import { PREDEFINED_POOLS } from "./constants";
 
 /* =========================
    TYPES
@@ -92,14 +93,14 @@ export class SignalManager {
     const pool1Name = parts[0].trim();
     const pool2Name = parts[1].trim();
 
-    // Map pool names to addresses (from predefined pools in Sky_O2O.py)
-    const poolMapping: { [key: string]: string } = {
-      "SOL/USDC 0.05% [VERIFIED]": "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
-      "SOL/USDC 0.01% [VERIFIED]": "83v8iPyZihDEjDdY8RdZddyZNyUtXngz69Lgo9Kt5d6d",
-    };
+    // Map pool names to addresses (from constants)
+    const poolMapping = new Map<string, string>();
+    for (const pool of PREDEFINED_POOLS) {
+      poolMapping.set(pool.name, pool.address);
+    }
 
-    const pool1Address = poolMapping[pool1Name];
-    const pool2Address = poolMapping[pool2Name];
+    const pool1Address = poolMapping.get(pool1Name);
+    const pool2Address = poolMapping.get(pool2Name);
 
     if (!pool1Address || !pool2Address) {
       console.error("Unknown pool in direction");
@@ -250,7 +251,7 @@ export class SignalManager {
   }
 
   /**
-   * Monitor signal file for changes
+   * Monitor signal file for changes (optimized with debouncing)
    */
   watchSignal(callback: (signal: ParsedSignal) => void): fs.FSWatcher {
     const dir = path.dirname(this.signalPath);
@@ -258,19 +259,33 @@ export class SignalManager {
 
     console.log(`[SIGNAL] Watching for signal file: ${this.signalPath}`);
 
-    const watcher = fs.watch(dir, (eventType, changedFile) => {
-      if (changedFile === filename && eventType === "rename") {
-        // File created or deleted
+    // Debounce to avoid multiple rapid triggers
+    let debounceTimer: NodeJS.Timeout | null = null;
+    const DEBOUNCE_MS = 100;
+
+    const processSignal = () => {
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+      debounceTimer = setTimeout(() => {
         if (this.signalExists()) {
-          console.log("\n[SIGNAL] New signal file detected!");
+          console.log("\n[SIGNAL] Signal file detected!");
           const parsed = this.validateAndParseSignal();
           callback(parsed);
         }
-      } else if (changedFile === filename && eventType === "change") {
-        // File modified
-        console.log("\n[SIGNAL] Signal file updated!");
-        const parsed = this.validateAndParseSignal();
-        callback(parsed);
+        debounceTimer = null;
+      }, DEBOUNCE_MS);
+    };
+
+    const watcher = fs.watch(dir, (eventType, changedFile) => {
+      if (changedFile === filename) {
+        if (eventType === "rename" && this.signalExists()) {
+          // File created
+          processSignal();
+        } else if (eventType === "change") {
+          // File modified
+          processSignal();
+        }
       }
     });
 

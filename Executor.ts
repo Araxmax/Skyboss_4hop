@@ -1,8 +1,9 @@
-﻿import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+﻿import { Connection, Keypair } from "@solana/web3.js";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import fs from "fs";
 import * as dotenv from "dotenv";
 import Decimal from "decimal.js";
+import { USDC_MINT_PUBKEY, DECIMAL_1E9 } from "./constants";
 
 dotenv.config();
 
@@ -19,10 +20,6 @@ if (!WALLET_PATH) throw new Error("WALLET_PATH missing in .env");
 /* =========================
    CONSTANTS
 ========================= */
-
-const USDC_MINT = new PublicKey(
-  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-);
 
 const MIN_SOL_REQUIRED = new Decimal(0.02);
 const MIN_USDC_REQUIRED = new Decimal(5);
@@ -48,10 +45,13 @@ async function main() {
 
   console.log("Wallet Address:", wallet.publicKey.toBase58());
 
-  /* ---------- SOL BALANCE ---------- */
-  const solLamports = await connection.getBalance(wallet.publicKey);
-  const solBalance = new Decimal(solLamports).div(1e9);
+  /* ---------- BALANCE CHECKS (parallelized) ---------- */
+  const [solLamports, usdcAta] = await Promise.all([
+    connection.getBalance(wallet.publicKey),
+    getAssociatedTokenAddress(USDC_MINT_PUBKEY, wallet.publicKey),
+  ]);
 
+  const solBalance = new Decimal(solLamports).div(DECIMAL_1E9);
   console.log("SOL Balance:", solBalance.toFixed(6));
 
   if (solBalance.lt(MIN_SOL_REQUIRED)) {
@@ -59,12 +59,6 @@ async function main() {
       `INSUFFICIENT SOL: Need at least ${MIN_SOL_REQUIRED.toString()} SOL`
     );
   }
-
-  /* ---------- USDC BALANCE ---------- */
-  const usdcAta = await getAssociatedTokenAddress(
-    USDC_MINT,
-    wallet.publicKey
-  );
 
   const usdcAccountInfo = await connection.getTokenAccountBalance(usdcAta);
   const usdcBalance = new Decimal(usdcAccountInfo.value.uiAmount || 0);

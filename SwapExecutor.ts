@@ -11,6 +11,10 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+// Pre-computed Decimal constants for performance
+const DECIMAL_099 = new Decimal(0.99);
+const DECIMAL_1 = new Decimal(1);
+
 /* =========================
    TYPES
 ========================= */
@@ -84,10 +88,11 @@ export class SwapExecutor {
 
       // For now, simulate the swap with estimated output
       // In a real implementation, this would use the Orca SDK
-      const estimatedOutput = amountIn.mul(new Decimal(1 - slippageTolerance));
+      const slippageMultiplier = DECIMAL_1.minus(slippageTolerance);
+      const estimatedOutput = amountIn.mul(slippageMultiplier);
 
       console.log(`Estimated Amount Out: ${estimatedOutput.toString()}`);
-      console.log(`Minimum Amount Out (with slippage): ${estimatedOutput.mul(0.99).toString()}`);
+      console.log(`Minimum Amount Out (with slippage): ${estimatedOutput.mul(DECIMAL_099).toString()}`);
 
       // NOTE: This is a placeholder. Real implementation would:
       // 1. Use Orca SDK to get swap quote
@@ -125,13 +130,14 @@ export class SwapExecutor {
     slippageTolerance: number = 0.01
   ): Promise<SwapQuote | null> {
     try {
-      // Simplified quote calculation
-      const estimatedOutput = amountIn.mul(new Decimal(1 - slippageTolerance));
+      // Simplified quote calculation (optimized)
+      const slippageMultiplier = DECIMAL_1.minus(slippageTolerance);
+      const estimatedOutput = amountIn.mul(slippageMultiplier);
 
       return {
         estimatedAmountIn: amountIn.toString(),
         estimatedAmountOut: estimatedOutput.toString(),
-        otherAmountThreshold: estimatedOutput.mul(0.99).toString(),
+        otherAmountThreshold: estimatedOutput.mul(DECIMAL_099).toString(),
         sqrtPriceLimit: "0",
         aToB: aToB,
         slippage: slippageTolerance,

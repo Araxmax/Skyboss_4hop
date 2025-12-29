@@ -1,6 +1,7 @@
 import { Connection, PublicKey, Keypair } from "@solana/web3.js";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import Decimal from "decimal.js";
+import { USDC_MINT_PUBKEY, DECIMAL_1E9, DECIMAL_1E6 } from "./constants";
 
 /* =========================
    TYPES
@@ -123,18 +124,20 @@ export class SafetyChecker {
   }
 
   /**
-   * Check wallet balances
+   * Check wallet balances (optimized with parallel RPC calls)
    */
   private async checkBalances(): Promise<SafetyCheckResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
 
     try {
-      // Check SOL balance
-      const solLamports = await this.connection.getBalance(
-        this.wallet.publicKey
-      );
-      const solBalance = new Decimal(solLamports).div(1e9);
+      // Parallel RPC calls for better performance
+      const [solLamports, usdcAta] = await Promise.all([
+        this.connection.getBalance(this.wallet.publicKey),
+        getAssociatedTokenAddress(USDC_MINT_PUBKEY, this.wallet.publicKey),
+      ]);
+
+      const solBalance = new Decimal(solLamports).div(DECIMAL_1E9);
 
       console.log(`\n[CHECK] SOL Balance: ${solBalance.toFixed(6)} SOL`);
 
@@ -149,14 +152,6 @@ export class SafetyChecker {
       }
 
       // Check USDC balance
-      const USDC_MINT = new PublicKey(
-        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-      );
-      const usdcAta = await getAssociatedTokenAddress(
-        USDC_MINT,
-        this.wallet.publicKey
-      );
-
       let usdcBalance = new Decimal(0);
       try {
         const usdcAccountInfo = await this.connection.getTokenAccountBalance(
@@ -244,7 +239,7 @@ export class SafetyChecker {
       const vaultABalance = await this.connection.getBalance(
         new PublicKey(vaultA)
       );
-      const solBalance = new Decimal(vaultABalance).div(1e9);
+      const solBalance = new Decimal(vaultABalance).div(DECIMAL_1E9);
 
       // Get vault B balance (USDC)
       let usdcBalance = new Decimal(0);
@@ -254,7 +249,7 @@ export class SafetyChecker {
         );
         if (vaultBInfo && vaultBInfo.data.length >= 72) {
           const amount = vaultBInfo.data.readBigUInt64LE(64);
-          usdcBalance = new Decimal(amount.toString()).div(1e6);
+          usdcBalance = new Decimal(amount.toString()).div(DECIMAL_1E6);
         }
       } catch (error) {
         warnings.push("Could not read USDC vault balance");
