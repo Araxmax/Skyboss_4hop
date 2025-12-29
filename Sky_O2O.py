@@ -1,4 +1,5 @@
 import os
+import json
 import requests
 from decimal import Decimal, getcontext
 from dotenv import load_dotenv
@@ -207,6 +208,7 @@ def find_arbitrage_opportunities(pools_data: list) -> list:
 # MAIN
 # ==============================
 def main():
+    global opportunities
     from datetime import datetime
     print("\n" + "=" * 70)
     print("ORCA TO ORCA ARBITRAGE SCANNER")
@@ -361,6 +363,26 @@ def main():
     print("\n" + "=" * 70)
     print("[OK] Scan complete")
     print("=" * 70)
+
+    if opportunities:
+        best = opportunities[0]["arbitrage"]
+
+        signal = {
+            "base": "USDC",
+            "direction": best["direction"],
+            "profit_pct": float(best["profit_pct"] * 100),
+            "trade_usdc": 50
+        }
+
+        with open("signal.json", "w") as f:
+            json.dump(signal, f, indent=2)
+
+        print("[OK] signal.json written")
+    else:
+        # IMPORTANT: delete old signal if no opportunity
+        if os.path.exists("signal.json"):
+            os.remove("signal.json")
+            print("[OK] signal.json removed (no opportunity)")
 
 if __name__ == "__main__":
     import time

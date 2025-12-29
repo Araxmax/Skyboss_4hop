@@ -1,0 +1,46 @@
+{
+  "name": "orca-to-orca-arbitrage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "verify": "node verify-setup.js",
+    "scanner": "python Sky_O2O.py",
+    "scanner:grpc": "ts-node GrpcScanner.ts",
+    "executor": "ts-node ArbitrageBot.ts",
+    "executor:once": "ts-node ArbitrageBot.ts --once",
+    "check-wallet": "ts-node Executor.ts",
+    "build": "tsc",
+    "start": "npm run executor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AIMaxLabz/Sky_O2O.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AIMaxLabz/Sky_O2O/issues"
+  },
+  "homepage": "https://github.com/AIMaxLabz/Sky_O2O#readme",
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
+    "@grpc/grpc-js": "^1.14.3",
+    "@grpc/proto-loader": "^0.8.0",
+    "@orca-so/common-sdk": "^0.7.0",
+    "@orca-so/whirlpools-sdk": "^0.17.4",
+    "@solana/web3.js": "^1.98.4",
+    "@types/bn.js": "^5.2.0",
+    "bn.js": "^5.2.2",
+    "decimal.js": "^10.6.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
