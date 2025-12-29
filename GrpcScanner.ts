@@ -5,6 +5,7 @@ import Decimal from 'decimal.js';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
 import { PREDEFINED_POOLS, MIN_PROFIT_THRESHOLD, DECIMAL_2_POW_64, DECIMAL_10_POW_9, DECIMAL_10_POW_6 } from './constants';
+import { CsvLogger, TradeLogEntry } from './CsvLogger';
 
 dotenv.config();
 
@@ -28,10 +29,12 @@ class HeliusGrpcScanner {
   private poolPrices: Map<string, Decimal>;
   private pollingInterval: NodeJS.Timeout | null = null;
   private isRunning: boolean = false;
+  private csvLogger: CsvLogger;
 
   constructor() {
     this.connection = new Connection(RPC_URL, 'confirmed');
     this.poolPrices = new Map();
+    this.csvLogger = new CsvLogger('./logs/scanner');
   }
 
   /**
@@ -145,6 +148,44 @@ class HeliusGrpcScanner {
     console.log(`  Spread: ${spreadPct.mul(100).toFixed(4)}%`);
     console.log(`  Net Profit: ${profitPct.mul(100).toFixed(4)}%`);
 
+    // Log to CSV for every price check
+    const logEntry: TradeLogEntry = {
+      timestamp: Date.now().toString(),
+      datetime: new Date().toISOString(),
+      signal_direction: direction,
+      price_001_pool: price2.toNumber(), // pool2 is 0.01%
+      price_005_pool: price1.toNumber(), // pool1 is 0.05%
+      spread: priceDiff.toNumber(),
+      spread_pct: spreadPct.mul(100).toNumber(),
+      expected_profit_pct: profitPct.mul(100).toNumber(),
+      trade_amount_usdc: parseFloat(process.env.TRADE_USD || "480"),
+      safety_passed: false,
+      safety_errors: "",
+      safety_warnings: "",
+      sol_balance: 0,
+      usdc_balance: 0,
+      executed: false,
+      dry_run: true,
+      swap1_pool: "",
+      swap1_success: false,
+      swap1_amount_in: 0,
+      swap1_amount_out: 0,
+      swap1_signature: "",
+      swap1_error: "",
+      swap2_pool: "",
+      swap2_success: false,
+      swap2_amount_in: 0,
+      swap2_amount_out: 0,
+      swap2_signature: "",
+      swap2_error: "",
+      actual_profit_usdc: 0,
+      actual_profit_pct: 0,
+      failure_reason: profitPct.gte(MIN_PROFIT_THRESHOLD_DECIMAL) ? "" : "Below profit threshold",
+      failure_stage: profitPct.gte(MIN_PROFIT_THRESHOLD_DECIMAL) ? "" : "scanner",
+    };
+
+    this.csvLogger.logTrade(logEntry);
+
     // Check if profitable
     if (profitPct.gte(MIN_PROFIT_THRESHOLD_DECIMAL)) {
       console.log(`\n[✓] PROFITABLE OPPORTUNITY DETECTED!`);
@@ -156,7 +197,7 @@ class HeliusGrpcScanner {
         base: "USDC",
         direction: direction,
         profit_pct: profitPct.mul(100).toNumber(),
-        trade_usdc: parseFloat(process.env.TRADE_USD || "50"),
+        trade_usdc: parseFloat(process.env.TRADE_USD || "480"),
         timestamp: Date.now(),
       };
 

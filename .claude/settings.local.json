@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npm run verify:*)",
       "Bash(ls:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx ts-node:*)",
+      "Bash(del:*)"
     ]
   }
 }
