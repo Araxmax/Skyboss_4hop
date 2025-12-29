@@ -8,8 +8,13 @@
     "verify": "node verify-setup.js",
     "scanner": "python Sky_O2O.py",
     "scanner:grpc": "ts-node GrpcScanner.ts",
+    "scanner:grpc-stream": "ts-node GrpcFastScanner.ts",
+    "scanner:fast": "ts-node FastScanner.ts",
     "executor": "ts-node ArbitrageBot.ts",
     "executor:once": "ts-node ArbitrageBot.ts --once",
+    "executor:fast": "ts-node FastExecutor.ts",
+    "fast": "concurrently \"npm run scanner:fast\" \"npm run executor:fast\"",
+    "grpc-fast": "concurrently \"npm run scanner:grpc-stream\" \"npm run executor:fast\"",
     "check-wallet": "ts-node Executor.ts",
     "build": "tsc",
     "start": "npm run executor"
