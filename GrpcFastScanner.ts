@@ -178,49 +178,58 @@ class GrpcFastScanner {
   }
 
   /**
-   * Optimized arbitrage check
+   * Optimized arbitrage check - BOTH DIRECTIONS
    */
   private checkArbitrageOptimized(): void {
     if (this.poolPrices.size < 2) return;
 
-    const pool1 = POOLS[0];
-    const pool2 = POOLS[1];
+    const pool005 = POOLS[0]; // 0.05% fee pool
+    const pool001 = POOLS[1]; // 0.01% fee pool
 
-    const price1 = this.poolPrices.get(pool1.address);
-    const price2 = this.poolPrices.get(pool2.address);
+    const price005 = this.poolPrices.get(pool005.address);
+    const price001 = this.poolPrices.get(pool001.address);
 
-    if (!price1 || !price2) return;
+    if (!price005 || !price001) return;
 
     this.priceCheckCount++;
 
-    // Fast calculations
-    const priceDiff = price1.minus(price2).abs();
-    const minPrice = price1.lt(price2) ? price1 : price2;
+    // ========================================
+    // DIRECTION 1: Buy on 0.05% → Sell on 0.01%
+    // ========================================
+    const costPerSOL_dir1 = price005.mul(new Decimal(1).plus(pool005.fee_rate)); // Buy on 0.05%
+    const revenuePerSOL_dir1 = price001.mul(new Decimal(1).minus(pool001.fee_rate)); // Sell on 0.01%
+    const profitPerSOL_dir1 = revenuePerSOL_dir1.minus(costPerSOL_dir1);
+    const profitPct_dir1 = profitPerSOL_dir1.div(costPerSOL_dir1);
+    const isProfitable_dir1 = profitPct_dir1.gt(MIN_PROFIT_THRESHOLD_DECIMAL) && profitPct_dir1.gt(0);
+
+    // ========================================
+    // DIRECTION 2: Buy on 0.01% → Sell on 0.05%
+    // ========================================
+    const costPerSOL_dir2 = price001.mul(new Decimal(1).plus(pool001.fee_rate)); // Buy on 0.01%
+    const revenuePerSOL_dir2 = price005.mul(new Decimal(1).minus(pool005.fee_rate)); // Sell on 0.05%
+    const profitPerSOL_dir2 = revenuePerSOL_dir2.minus(costPerSOL_dir2);
+    const profitPct_dir2 = profitPerSOL_dir2.div(costPerSOL_dir2);
+    const isProfitable_dir2 = profitPct_dir2.gt(MIN_PROFIT_THRESHOLD_DECIMAL) && profitPct_dir2.gt(0);
+
+    // Calculate spreads
+    const priceDiff = price005.minus(price001).abs();
+    const minPrice = price005.lt(price001) ? price005 : price001;
     const spreadPct = priceDiff.div(minPrice);
 
-    // Determine direction (buy low, sell high)
-    const buyLower = price1.lt(price2);
-    const direction = buyLower
-      ? `${pool1.name} -> ${pool2.name}`
-      : `${pool2.name} -> ${pool1.name}`;
+    // Pick the most profitable direction (or any if checking both)
+    const direction1 = `${pool005.name} -> ${pool001.name}`;
+    const direction2 = `${pool001.name} -> ${pool005.name}`;
 
-    const buyPrice = buyLower ? price1 : price2;
-    const sellPrice = buyLower ? price2 : price1;
-    const buyPool = buyLower ? pool1 : pool2;
-    const sellPool = buyLower ? pool2 : pool1;
+    // Best direction
+    let bestDirection = direction1;
+    let bestProfitPct = profitPct_dir1;
+    let isProfitable = isProfitable_dir1;
 
-    // CORRECTED profit calculation
-    // We BUY SOL with USDC (pay buy fee)
-    // Then SELL SOL for USDC (pay sell fee)
-    const costPerSOL = buyPrice.mul(new Decimal(1).plus(buyPool.fee_rate));
-    const revenuePerSOL = sellPrice.mul(new Decimal(1).minus(sellPool.fee_rate));
-
-    // Profit per SOL = revenue - cost
-    const profitPerSOL = revenuePerSOL.minus(costPerSOL);
-    const profitPct = profitPerSOL.div(costPerSOL);
-
-    // Only profitable if profit > threshold AND positive
-    const isProfitable = profitPct.gt(MIN_PROFIT_THRESHOLD_DECIMAL) && profitPct.gt(0);
+    if (profitPct_dir2.gt(profitPct_dir1)) {
+      bestDirection = direction2;
+      bestProfitPct = profitPct_dir2;
+      isProfitable = isProfitable_dir2;
+    }
 
     // Log every 20th check or if profitable (reduced logging for speed)
     if (isProfitable || this.priceCheckCount % 20 === 0) {
@@ -228,21 +237,23 @@ class GrpcFastScanner {
       const updatesPerSec = (this.updateCount / parseFloat(elapsed)).toFixed(1);
 
       console.log(`\n[CHECK ${this.priceCheckCount}] [${elapsed}s] [${updatesPerSec} updates/s]`);
-      console.log(`  ${pool1.name}: $${price1.toFixed(6)}`);
-      console.log(`  ${pool2.name}: $${price2.toFixed(6)}`);
+      console.log(`  ${pool005.name}: $${price005.toFixed(6)}`);
+      console.log(`  ${pool001.name}: $${price001.toFixed(6)}`);
       console.log(`  Spread: ${spreadPct.mul(100).toFixed(4)}%`);
-      console.log(`  Profit: ${profitPct.mul(100).toFixed(4)}%`);
+      console.log(`  Direction 1 (0.05%→0.01%): ${profitPct_dir1.mul(100).toFixed(4)}%`);
+      console.log(`  Direction 2 (0.01%→0.05%): ${profitPct_dir2.mul(100).toFixed(4)}%`);
+      console.log(`  Best Direction: ${bestDirection} (${bestProfitPct.mul(100).toFixed(4)}%)`);
 
       // CSV logging (only log every 20th or if profitable to reduce I/O)
       const logEntry: TradeLogEntry = {
         timestamp: Date.now().toString(),
         datetime: new Date().toISOString(),
-        signal_direction: direction,
-        price_001_pool: price2.toNumber(),
-        price_005_pool: price1.toNumber(),
+        signal_direction: bestDirection,
+        price_001_pool: price001.toNumber(),
+        price_005_pool: price005.toNumber(),
         spread: priceDiff.toNumber(),
         spread_pct: spreadPct.mul(100).toNumber(),
-        expected_profit_pct: profitPct.mul(100).toNumber(),
+        expected_profit_pct: bestProfitPct.mul(100).toNumber(),
         trade_amount_usdc: parseFloat(process.env.TRADE_USD || "480"),
         safety_passed: false,
         safety_errors: "",
@@ -279,15 +290,15 @@ class GrpcFastScanner {
         console.log(`\n${'='.repeat(70)}`);
         console.log(`🚨 PROFITABLE OPPORTUNITY DETECTED!`);
         console.log(`${'='.repeat(70)}`);
-        console.log(`Direction: ${direction}`);
-        console.log(`Profit: ${profitPct.mul(100).toFixed(4)}%`);
+        console.log(`Best Direction: ${bestDirection}`);
+        console.log(`Profit: ${bestProfitPct.mul(100).toFixed(4)}%`);
         console.log(`Time: ${new Date().toLocaleTimeString()}`);
         console.log(`${'='.repeat(70)}\n`);
 
         const signal = {
           base: "USDC",
-          direction: direction,
-          profit_pct: profitPct.mul(100).toNumber(),
+          direction: bestDirection,
+          profit_pct: bestProfitPct.mul(100).toNumber(),
           trade_usdc: parseFloat(process.env.TRADE_USD || "480"),
           timestamp: now,
         };
