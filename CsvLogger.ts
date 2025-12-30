@@ -60,6 +60,7 @@ export interface TradeLogEntry {
 export class CsvLogger {
   private logFilePath: string;
   private summaryFilePath: string;
+  private entryCount: number = 0;
 
   constructor(logDir: string = './logs') {
     // Create logs directory if it doesn't exist
@@ -74,6 +75,9 @@ export class CsvLogger {
 
     // Initialize CSV file with headers if it doesn't exist
     this.initializeCsvFile();
+
+    // Count existing entries to continue numbering
+    this.entryCount = this.countExistingEntries();
   }
 
   /**
@@ -82,6 +86,7 @@ export class CsvLogger {
   private initializeCsvFile(): void {
     if (!fs.existsSync(this.logFilePath)) {
       const headers = [
+        'No.',
         'Timestamp',
         'DateTime',
         'Signal Direction',
@@ -119,6 +124,20 @@ export class CsvLogger {
       fs.writeFileSync(this.logFilePath, headers + '\n');
       console.log(`[CSV] Created log file: ${this.logFilePath}`);
     }
+  }
+
+  /**
+   * Count existing entries in CSV file
+   */
+  private countExistingEntries(): number {
+    if (!fs.existsSync(this.logFilePath)) {
+      return 0;
+    }
+
+    const content = fs.readFileSync(this.logFilePath, 'utf8');
+    const lines = content.split('\n').filter(line => line.trim().length > 0);
+    // Subtract 1 for header row
+    return Math.max(0, lines.length - 1);
   }
 
   /**
@@ -164,11 +183,15 @@ export class CsvLogger {
    * Log a trade attempt
    */
   logTrade(entry: TradeLogEntry): void {
+    // Increment entry count
+    this.entryCount++;
+
     // Convert datetime to 12-hour format
     const date = new Date(entry.datetime);
     const datetime12h = this.formatDateTime12Hour(date);
 
     const row = [
+      this.entryCount,  // Serial number
       entry.timestamp,
       this.escapeCsvValue(datetime12h),
       this.escapeCsvValue(entry.signal_direction),
@@ -205,7 +228,7 @@ export class CsvLogger {
 
     fs.appendFileSync(this.logFilePath, row + '\n');
 
-    console.log(`[CSV] Logged trade: ${entry.executed ? 'EXECUTED' : 'FAILED'} - ${entry.failure_reason || 'Success'}`);
+    console.log(`[CSV] Logged trade #${this.entryCount}: ${entry.executed ? 'EXECUTED' : 'FAILED'} - ${entry.failure_reason || 'Success'}`);
   }
 
   /**

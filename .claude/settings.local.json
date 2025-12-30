@@ -6,7 +6,9 @@
       "Bash(npm install:*)",
       "Bash(npx tsc:*)",
       "Bash(npx ts-node:*)",
-      "Bash(del:*)"
+      "Bash(del:*)",
+      "Bash(npm run build:*)",
+      "Bash(node -p:*)"
     ]
   }
 }

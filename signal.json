@@ -1,7 +1,7 @@
 {
   "base": "USDC",
-  "direction": "SOL/USDC 0.05% [VERIFIED] -> SOL/USDC 0.01% [VERIFIED]",
-  "profit_pct": 0.010770103831533541,
-  "trade_usdc": 480,
-  "timestamp": 1767019922351
+  "direction": "SOL/USDC 0.01% [VERIFIED] -> SOL/USDC 0.05% [VERIFIED]",
+  "profit_pct": 0.27805948335050445,
+  "trade_usdc": 100,
+  "timestamp": 1767088512144
 }

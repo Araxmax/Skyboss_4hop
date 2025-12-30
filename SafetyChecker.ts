@@ -102,11 +102,15 @@ export class SafetyChecker {
       errors.push(...rpcCheck.errors);
     }
 
-    // Check 4: Trade size vs balance
+    // Check 4: Trade size vs balance (STRICTER - 80% hard limit)
     if (balanceCheck.balances) {
-      if (tradeAmountUSD.gt(balanceCheck.balances.usdc.mul(0.9))) {
+      if (tradeAmountUSD.gt(balanceCheck.balances.usdc.mul(0.8))) {
+        errors.push(
+          `Trade amount ${tradeAmountUSD.toString()} USDC exceeds 80% limit (${balanceCheck.balances.usdc.toFixed(2)} USDC available)`
+        );
+      } else if (tradeAmountUSD.gt(balanceCheck.balances.usdc.mul(0.6))) {
         warnings.push(
-          `Trade amount ${tradeAmountUSD.toString()} USDC uses >90% of balance`
+          `Trade amount ${tradeAmountUSD.toString()} USDC uses >60% of balance`
         );
       }
     }

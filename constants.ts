@@ -46,8 +46,12 @@ export const PREDEFINED_POOLS: PoolConfig[] = [
    ARBITRAGE THRESHOLDS
 ========================= */
 
-export const MIN_PROFIT_THRESHOLD = 0.00001; // 0.001%
-export const OPTIMAL_PROFIT_THRESHOLD = 0.0001; // 0.01%
+// Minimum profit threshold AFTER fees
+// Pool fees: 0.01% + 0.05% = 0.06% total
+// Gas fees: ~$0.02-0.05 per trade
+// Need minimum 0.15% profit to break even
+export const MIN_PROFIT_THRESHOLD = 0.0015; // 0.15% (realistic minimum)
+export const OPTIMAL_PROFIT_THRESHOLD = 0.003; // 0.3% (good target)
 
 /* =========================
    DECIMAL CONSTANTS (pre-computed for performance)

@@ -37,11 +37,15 @@
     "@grpc/proto-loader": "^0.8.0",
     "@orca-so/common-sdk": "^0.7.0",
     "@orca-so/whirlpools-sdk": "^0.17.4",
+    "@solana/spl-token": "^0.4.14",
     "@solana/web3.js": "^1.98.4",
     "@types/bn.js": "^5.2.0",
+    "axios": "^1.13.2",
     "bn.js": "^5.2.2",
     "decimal.js": "^10.6.0",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "jito-ts": "^4.2.1",
+    "p-retry": "^7.1.1"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",

@@ -1,4 +1,4 @@
-import { Connection, Keypair, Transaction, TransactionInstruction, ComputeBudgetProgram, sendAndConfirmTransaction } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, Transaction, TransactionInstruction, ComputeBudgetProgram, sendAndConfirmTransaction } from "@solana/web3.js";
 import fs from "fs";
 import Decimal from "decimal.js";
 import * as dotenv from "dotenv";
@@ -6,7 +6,7 @@ import { SwapExecutor } from "./SwapExecutor";
 import { SignalManager, ParsedSignal } from "./SignalManager";
 import { SafetyChecker } from "./SafetyChecker";
 import { CsvLogger, TradeLogEntry } from "./CsvLogger";
-import { SOL_MINT, USDC_MINT } from "./constants";
+import { SOL_MINT, USDC_MINT, PREDEFINED_POOLS, DECIMAL_2_POW_64, DECIMAL_10_POW_9, DECIMAL_10_POW_6 } from "./constants";
 
 dotenv.config();
 
@@ -58,7 +58,14 @@ class FastArbitrageExecutor {
       this.connection,
       this.wallet,
       config.maxSlippage,
-      config.maxPriorityFee
+      config.maxPriorityFee,
+      {
+        heliusApiKey: process.env.HELIUS_API_KEY,
+        usePrivateTx: true, // Enable MEV protection
+        maxRetries: 3,
+        retryDelay: 1000,
+        transactionDeadline: 30,
+      }
     );
 
     this.signalManager = new SignalManager(
@@ -243,14 +250,63 @@ class FastArbitrageExecutor {
   }
 
   /**
-   * Fetch pool prices for log entry
+   * Decode Whirlpool sqrt price from account data
+   */
+  private decodeSqrtPrice(data: Buffer): bigint {
+    if (data.length < 81) {
+      throw new Error('Invalid whirlpool data length');
+    }
+    // sqrt_price is at offset 65-81 (16 bytes, u128)
+    return data.readBigUInt64LE(65) + (BigInt(data.readUInt32LE(73)) << BigInt(64));
+  }
+
+  /**
+   * Convert sqrt price X64 to regular price
+   */
+  private sqrtPriceToPrice(sqrtPriceX64: bigint): Decimal {
+    const sqrtPrice = new Decimal(sqrtPriceX64.toString()).div(DECIMAL_2_POW_64);
+    const price = sqrtPrice.pow(2);
+    return price.mul(DECIMAL_10_POW_9).div(DECIMAL_10_POW_6);
+  }
+
+  /**
+   * Fetch pool prices for log entry (FIXED - was returning 0,0)
    */
   private async fetchPoolPricesForEntry(signal: ParsedSignal): Promise<{ price_001: Decimal; price_005: Decimal }> {
-    // Fast placeholder - in production, fetch from pools
-    return {
-      price_001: new Decimal(0),
-      price_005: new Decimal(0),
-    };
+    try {
+      const pool001Address = new PublicKey(PREDEFINED_POOLS[1].address); // 0.01% pool
+      const pool005Address = new PublicKey(PREDEFINED_POOLS[0].address); // 0.05% pool
+
+      const accountInfos = await this.connection.getMultipleAccountsInfo(
+        [pool001Address, pool005Address],
+        { commitment: 'confirmed' }
+      );
+
+      if (!accountInfos[0] || !accountInfos[1]) {
+        console.warn('[FAST] Failed to fetch pool account data, using zero prices');
+        return {
+          price_001: new Decimal(0),
+          price_005: new Decimal(0),
+        };
+      }
+
+      const sqrtPrice001 = this.decodeSqrtPrice(accountInfos[0].data);
+      const sqrtPrice005 = this.decodeSqrtPrice(accountInfos[1].data);
+
+      const price001 = this.sqrtPriceToPrice(sqrtPrice001);
+      const price005 = this.sqrtPriceToPrice(sqrtPrice005);
+
+      return {
+        price_001: price001,
+        price_005: price005,
+      };
+    } catch (error: any) {
+      console.error(`[FAST] Error fetching prices: ${error.message}`);
+      return {
+        price_001: new Decimal(0),
+        price_005: new Decimal(0),
+      };
+    }
   }
 
   /**
