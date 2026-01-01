@@ -9,12 +9,16 @@
     "scanner": "python Sky_O2O.py",
     "scanner:grpc": "ts-node GrpcScanner.ts",
     "scanner:grpc-stream": "ts-node GrpcFastScanner.ts",
+    "scanner:hft": "ts-node UltraFastGrpcScanner.ts",
     "scanner:fast": "ts-node FastScanner.ts",
     "executor": "ts-node ArbitrageBot.ts",
     "executor:once": "ts-node ArbitrageBot.ts --once",
     "executor:fast": "ts-node FastExecutor.ts",
     "fast": "concurrently \"npm run scanner:fast\" \"npm run executor:fast\"",
     "grpc-fast": "concurrently \"npm run scanner:grpc-stream\" \"npm run executor:fast\"",
+    "hft": "concurrently \"npm run scanner:hft\" \"npm run executor:fast\"",
+    "test-connection": "ts-node TestConnection.ts",
+    "view-logs": "node view-logs.js",
     "check-wallet": "ts-node Executor.ts",
     "build": "tsc",
     "start": "npm run executor"
@@ -49,6 +53,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
+    "concurrently": "^9.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
