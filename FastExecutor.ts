@@ -61,10 +61,10 @@ class FastArbitrageExecutor {
       config.maxPriorityFee,
       {
         heliusApiKey: process.env.HELIUS_API_KEY,
-        usePrivateTx: true, // Enable MEV protection
+        usePrivateTx: process.env.USE_HELIUS_PRIVATE_TX === 'true', // Read from env
         maxRetries: 3,
         retryDelay: 1000,
-        transactionDeadline: 30,
+        transactionDeadline: 60, // Increased to 60s for better reliability
       }
     );
 
@@ -135,7 +135,7 @@ class FastArbitrageExecutor {
       price_005_pool: poolPrices.price_005.toNumber(),
       spread: spread.toNumber(),
       spread_pct: spreadPct.toNumber(),
-      expected_profit_pct: signal.profitPercent.mul(100).toNumber(),
+      expected_profit_pct: signal.profitPercent.toNumber(), // Already a percentage
       trade_amount_usdc: signal.tradeAmount.toNumber(),
       safety_passed: safetyCheck.passed,
       safety_errors: safetyCheck.errors.join("; "),
@@ -199,18 +199,35 @@ class FastArbitrageExecutor {
     }
 
     // LIVE EXECUTION
-    console.log(`[⚡] 🔥 Executing LIVE trade...`);
+    const swapMode = (process.env.SWAP_MODE || 'ATOMIC').toUpperCase();
+    console.log(`[⚡] 🔥 Executing LIVE trade... (Mode: ${swapMode})`);
 
     try {
-      const result = await this.swapExecutor.executeArbitrage(
-        signal.pool1Address,
-        signal.pool2Address,
-        SOL_MINT,
-        USDC_MINT,
-        signal.tradeAmount,
-        signal.direction,
-        this.config.maxSlippage
-      );
+      let result;
+
+      if (swapMode === 'SINGLE') {
+        // SINGLE MODE: Execute two separate swaps sequentially
+        result = await this.executeSequentialSwaps(
+          signal.pool1Address,
+          signal.pool2Address,
+          SOL_MINT,
+          USDC_MINT,
+          signal.tradeAmount,
+          signal.direction,
+          this.config.maxSlippage
+        );
+      } else {
+        // ATOMIC MODE: Execute both swaps in one transaction (default)
+        result = await this.swapExecutor.executeArbitrage(
+          signal.pool1Address,
+          signal.pool2Address,
+          SOL_MINT,
+          USDC_MINT,
+          signal.tradeAmount,
+          signal.direction,
+          this.config.maxSlippage
+        );
+      }
 
       if (result.success && result.swap1 && result.swap2) {
         logEntry.executed = true;
@@ -246,6 +263,121 @@ class FastArbitrageExecutor {
 
       console.log(`[⚡] ✗ Exception: ${error.message}`);
       return false;
+    }
+  }
+
+  /**
+   * Execute sequential swaps (SINGLE mode) - two separate transactions
+   */
+  private async executeSequentialSwaps(
+    pool1Address: string,
+    pool2Address: string,
+    tokenAMint: string,
+    tokenBMint: string,
+    initialAmount: Decimal,
+    direction: string,
+    slippage: number
+  ): Promise<any> {
+    console.log("\n" + "=".repeat(70));
+    console.log("EXECUTING SEQUENTIAL SWAPS (SINGLE MODE)");
+    console.log("=".repeat(70));
+
+    try {
+      // Determine swap direction and pools based on signal direction
+      let firstPool: string;
+      let secondPool: string;
+      let firstInputMint: string;
+      let firstOutputMint: string;
+      let secondInputMint: string;
+      let secondOutputMint: string;
+
+      // Match the logic from ATOMIC mode - always start with USDC, buy SOL, sell SOL for USDC
+      if (direction === "pool1-to-pool2") {
+        firstPool = pool1Address;
+        secondPool = pool2Address;
+        firstInputMint = tokenBMint; // USDC
+        firstOutputMint = tokenAMint; // SOL
+        secondInputMint = tokenAMint; // SOL
+        secondOutputMint = tokenBMint; // USDC
+      } else {
+        firstPool = pool2Address;
+        secondPool = pool1Address;
+        firstInputMint = tokenBMint; // USDC
+        firstOutputMint = tokenAMint; // SOL
+        secondInputMint = tokenAMint; // SOL
+        secondOutputMint = tokenBMint; // USDC
+      }
+
+      console.log(`\n[SINGLE] Swap 1: ${firstInputMint === tokenBMint ? "USDC" : "SOL"} -> ${firstOutputMint === tokenBMint ? "USDC" : "SOL"} on ${firstPool.slice(0, 8)}...`);
+      console.log(`[SINGLE]   Amount: ${initialAmount.toString()} ${firstInputMint === tokenBMint ? "USDC" : "SOL"}`);
+
+      // Execute first swap: USDC -> SOL
+      const swap1Result = await this.swapExecutor.executeSingleSwap(
+        firstPool,
+        firstInputMint,
+        firstOutputMint,
+        initialAmount,
+        slippage
+      );
+
+      if (!swap1Result.success) {
+        console.log(`[SINGLE] ✗ Swap 1 failed: ${swap1Result.error}`);
+        return {
+          success: false,
+          error: `Swap 1 failed: ${swap1Result.error}`,
+          swap1: swap1Result,
+          swap2: null,
+        };
+      }
+
+      console.log(`[SINGLE] ✓ Swap 1 completed: ${swap1Result.signature}`);
+      console.log(`[SINGLE]   Output: ${swap1Result.amountOut}`);
+
+      // Execute second swap with output from first swap: SOL -> USDC
+      const secondSwapAmount = new Decimal(swap1Result.amountOut || "0");
+
+      console.log(`\n[SINGLE] Swap 2: ${secondInputMint === tokenBMint ? "USDC" : "SOL"} -> ${secondOutputMint === tokenBMint ? "USDC" : "SOL"} on ${secondPool.slice(0, 8)}...`);
+      console.log(`[SINGLE]   Amount: ${secondSwapAmount.toString()} ${secondInputMint === tokenBMint ? "USDC" : "SOL"}`);
+
+      const swap2Result = await this.swapExecutor.executeSingleSwap(
+        secondPool,
+        secondInputMint,
+        secondOutputMint,
+        secondSwapAmount,
+        slippage
+      );
+
+      if (!swap2Result.success) {
+        console.log(`[SINGLE] ✗ Swap 2 failed: ${swap2Result.error}`);
+        console.log(`[SINGLE] ⚠️  Partial execution - Swap 1 succeeded but Swap 2 failed`);
+        return {
+          success: false,
+          error: `Swap 2 failed: ${swap2Result.error} (Partial execution - funds stuck in intermediate token)`,
+          swap1: swap1Result,
+          swap2: swap2Result,
+        };
+      }
+
+      console.log(`[SINGLE] ✓ Swap 2 completed: ${swap2Result.signature}`);
+      console.log(`[SINGLE]   Output: ${swap2Result.amountOut}`);
+
+      console.log("\n" + "=".repeat(70));
+      console.log("SEQUENTIAL SWAPS COMPLETE");
+      console.log("=".repeat(70));
+
+      return {
+        success: true,
+        swap1: swap1Result,
+        swap2: swap2Result,
+      };
+    } catch (error: any) {
+      console.error(`[SINGLE] Sequential swap error: ${error.message}`);
+      return {
+        success: false,
+        error: error.message,
+        swap1: null,
+        swap2: null,
+      };
     }
   }
 
@@ -318,9 +450,146 @@ class FastArbitrageExecutor {
   }
 
   /**
+   * Execute a test swap on startup (BOT_SWAP_CHECK feature)
+   * Validates wallet, pools, and connection before live trading
+   */
+  private async executeTestSwap(): Promise<void> {
+    console.log("\n" + "=".repeat(70));
+    console.log("🧪 EXECUTING STARTUP TEST SWAP");
+    console.log("=".repeat(70));
+    console.log("Purpose: Validate wallet, pools, and Orca SDK integration");
+    console.log("Amount: Small test amount (regardless of profit/loss)");
+    console.log("=".repeat(70) + "\n");
+
+    try {
+      // Use trade amount from env (default 10 USDC)
+      const testAmount = new Decimal(process.env.TRADE_USD || "10");
+      const swapMode = (process.env.SWAP_MODE || 'ATOMIC').toUpperCase();
+
+      console.log(`[TEST] Test amount: $${testAmount} USDC`);
+      console.log(`[TEST] Swap mode: ${swapMode}`);
+      console.log(`[TEST] Dry run: ${this.config.dryRun ? 'YES (simulated)' : 'NO (LIVE)'}\n`);
+
+      // Use the first available direction (pool 0.05% -> pool 0.01%)
+      const pool1 = PREDEFINED_POOLS[0]; // 0.05% pool
+      const pool2 = PREDEFINED_POOLS[1]; // 0.01% pool
+      const direction = "pool1-to-pool2";
+
+      console.log(`[TEST] Direction: ${pool1.name} -> ${pool2.name}`);
+      console.log(`[TEST] Pool 1: ${pool1.address}`);
+      console.log(`[TEST] Pool 2: ${pool2.address}\n`);
+
+      const startTime = Date.now();
+
+      if (this.config.dryRun) {
+        // DRY RUN - Simulate the test swap
+        console.log("[TEST] 🔄 Simulating test swap (DRY RUN)...");
+        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
+        const execTime = Date.now() - startTime;
+
+        console.log("\n" + "=".repeat(70));
+        console.log("✅ TEST SWAP SIMULATION COMPLETE");
+        console.log("=".repeat(70));
+        console.log(`Status: SUCCESS (simulated)`);
+        console.log(`Execution time: ${execTime}ms`);
+        console.log(`Mode: DRY RUN`);
+        console.log("=".repeat(70) + "\n");
+
+        return;
+      }
+
+      // LIVE EXECUTION
+      console.log(`[TEST] 🔥 Executing LIVE test swap... (Mode: ${swapMode})`);
+
+      let result;
+
+      if (swapMode === 'SINGLE') {
+        // SINGLE MODE: Two separate transactions
+        result = await this.executeSequentialSwaps(
+          pool1.address,
+          pool2.address,
+          SOL_MINT,
+          USDC_MINT,
+          testAmount,
+          direction,
+          this.config.maxSlippage
+        );
+      } else {
+        // ATOMIC MODE: One transaction with both swaps
+        result = await this.swapExecutor.executeArbitrage(
+          pool1.address,
+          pool2.address,
+          SOL_MINT,
+          USDC_MINT,
+          testAmount,
+          direction,
+          this.config.maxSlippage
+        );
+      }
+
+      const execTime = Date.now() - startTime;
+
+      console.log("\n" + "=".repeat(70));
+      if (result.success && result.swap1 && result.swap2) {
+        console.log("✅ TEST SWAP COMPLETE - SUCCESS");
+        console.log("=".repeat(70));
+        console.log(`Swap 1: ${result.swap1.success ? '✅ SUCCESS' : '❌ FAILED'}`);
+        console.log(`  Signature: ${result.swap1.signature}`);
+        console.log(`  Amount In: ${result.swap1.amountIn} USDC`);
+        console.log(`  Amount Out: ${result.swap1.amountOut} SOL`);
+        console.log(`Swap 2: ${result.swap2.success ? '✅ SUCCESS' : '❌ FAILED'}`);
+        console.log(`  Signature: ${result.swap2.signature}`);
+        console.log(`  Amount In: ${result.swap2.amountIn} SOL`);
+        console.log(`  Amount Out: ${result.swap2.amountOut} USDC`);
+
+        const finalOut = new Decimal(result.swap2.amountOut || "0");
+        const profit = finalOut.minus(testAmount);
+        const profitPct = profit.div(testAmount).mul(100);
+
+        console.log(`\nResult:`);
+        console.log(`  Started with: ${testAmount} USDC`);
+        console.log(`  Ended with: ${finalOut.toFixed(6)} USDC`);
+        console.log(`  Profit/Loss: ${profit.toFixed(6)} USDC (${profitPct.toFixed(4)}%)`);
+        console.log(`  Execution time: ${execTime}ms`);
+        console.log(`  Mode: ${swapMode}`);
+      } else {
+        console.log("❌ TEST SWAP FAILED");
+        console.log("=".repeat(70));
+        console.log(`Error: ${result.error || 'Unknown error'}`);
+        console.log(`Execution time: ${execTime}ms`);
+        console.log(`Mode: ${swapMode}`);
+      }
+      console.log("=".repeat(70) + "\n");
+
+      // Brief pause before continuing
+      console.log("⏳ Waiting 3 seconds before starting normal operation...\n");
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+    } catch (error: any) {
+      console.error("\n" + "=".repeat(70));
+      console.error("❌ TEST SWAP ERROR");
+      console.error("=".repeat(70));
+      console.error(`Error: ${error.message}`);
+      console.error("=".repeat(70) + "\n");
+
+      console.log("⚠️  Test swap failed, but continuing to normal operation...");
+      console.log("⏳ Waiting 3 seconds...\n");
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+  }
+
+  /**
    * Watch for signals (fast polling)
    */
   async start(): Promise<void> {
+    // Execute test swap on startup if enabled
+    const botSwapCheck = process.env.BOT_SWAP_CHECK === 'true';
+    if (botSwapCheck) {
+      await this.executeTestSwap();
+    } else {
+      console.log("[⚡] BOT_SWAP_CHECK disabled - skipping startup test swap\n");
+    }
+
     console.log("\n[⚡] EXECUTOR READY - Watching for signals...");
     console.log("[⚡] Press Ctrl+C to stop\n");
 

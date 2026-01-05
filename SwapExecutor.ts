@@ -180,38 +180,74 @@ export class SwapExecutor {
   ): Promise<string> {
     const startTime = Date.now();
     const maxRetries = options.maxRetries ?? this.maxRetries;
+    let attemptCount = 0;
 
-    const sendFn = async (attempt: number): Promise<string> => {
-      console.log(`[TX] Attempt ${attempt}/${maxRetries}`);
+    // CRITICAL FIX: p-retry expects a function with NO parameters!
+    const sendFn = async (): Promise<string> => {
+      try {
+        attemptCount++;
+        console.log(`[TX] Attempt ${attemptCount}/${maxRetries + 1}`);
+        console.log(`[TX] DEBUG: Entered sendFn`);
 
-      // Check deadline
-      const elapsed = (Date.now() - startTime) / 1000;
-      if (elapsed > this.transactionDeadline) {
-        throw new Error(`Transaction deadline exceeded (${this.transactionDeadline}s)`);
+        // Check deadline BEFORE attempting
+        const elapsed = (Date.now() - startTime) / 1000;
+        console.log(`[TX] DEBUG: Checking deadline (elapsed: ${elapsed.toFixed(1)}s / ${this.transactionDeadline}s)`);
+        if (elapsed > this.transactionDeadline) {
+          throw new Error(`Transaction deadline exceeded (${this.transactionDeadline}s, elapsed: ${elapsed.toFixed(1)}s)`);
+        }
+
+        // Use Helius private transaction if enabled
+        console.log(`[TX] DEBUG: Checking private tx mode (usePrivateTx: ${this.usePrivateTx}, hasApiKey: ${!!this.heliusApiKey})`);
+        if (this.usePrivateTx && this.heliusApiKey) {
+          console.log("[TX] Using Helius private transaction (MEV protected)");
+          return await this.sendPrivateTransaction(transaction);
+        }
+
+        // Standard public transaction
+        console.log("[TX] Using standard public transaction");
+        console.log(`[TX] DEBUG: About to call connection.sendTransaction (skipPreflight: ${options.skipPreflight ?? false})`);
+
+        const signature = await this.connection.sendTransaction(transaction, {
+          skipPreflight: options.skipPreflight ?? false,
+          maxRetries: 0, // We handle retries ourselves
+        });
+
+        console.log(`[TX] Transaction sent: ${signature}`);
+        console.log(`[TX] Waiting for confirmation...`);
+
+        // Wait for confirmation with timeout (30 seconds max)
+        const confirmationTimeout = 30000; // 30 seconds
+        const confirmationPromise = this.connection.confirmTransaction(
+          signature,
+          "confirmed"
+        );
+
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Confirmation timeout (30s)')), confirmationTimeout)
+        );
+
+        const confirmation = await Promise.race([confirmationPromise, timeoutPromise]);
+
+        if (confirmation.value.err) {
+          throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
+        }
+
+        console.log(`[TX] Transaction confirmed: ${signature}`);
+        return signature;
+      } catch (error: any) {
+        // Log the actual error before p-retry wraps it
+        console.error(`[TX] ERROR in sendFn (attempt ${attemptCount}):`);
+        console.error(`[TX] Error type: ${error.constructor?.name || typeof error}`);
+        console.error(`[TX] Error message: ${error.message || String(error)}`);
+        if (error.logs) {
+          console.error(`[TX] Transaction logs:`, error.logs);
+        }
+        if (error.stack) {
+          console.error(`[TX] Stack trace:`, error.stack);
+        }
+        // Re-throw for p-retry to handle
+        throw error;
       }
-
-      // Use Helius private transaction if enabled
-      if (this.usePrivateTx && this.heliusApiKey) {
-        return await this.sendPrivateTransaction(transaction);
-      }
-
-      // Standard public transaction
-      const signature = await this.connection.sendTransaction(transaction, {
-        skipPreflight: options.skipPreflight ?? false,
-        maxRetries: 0, // We handle retries ourselves
-      });
-
-      // Wait for confirmation with retry-aware timeout
-      const confirmation = await this.connection.confirmTransaction(
-        signature,
-        "confirmed"
-      );
-
-      if (confirmation.value.err) {
-        throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
-      }
-
-      return signature;
     };
 
     // Use p-retry for exponential backoff
@@ -220,9 +256,25 @@ export class SwapExecutor {
       minTimeout: this.retryDelay,
       maxTimeout: this.retryDelay * 4,
       onFailedAttempt: (error: any) => {
-        console.warn(
-          `[TX] Attempt ${error.attemptNumber} failed: ${error.message || error}`
-        );
+        // Better error logging - handle all error types
+        let errorMsg = '';
+        if (error && error.message) {
+          errorMsg = error.message;
+        } else if (typeof error === 'string') {
+          errorMsg = error;
+        } else if (error && typeof error === 'object') {
+          errorMsg = JSON.stringify(error, Object.getOwnPropertyNames(error), 2);
+        } else {
+          errorMsg = String(error);
+        }
+
+        console.warn(`[TX] Attempt ${error.attemptNumber} failed:`);
+        console.warn(`[TX] Error: ${errorMsg}`);
+
+        if (error.logs) {
+          console.warn(`[TX] Transaction logs:`, error.logs);
+        }
+
         if (error.retriesLeft > 0) {
           console.log(`[TX] Retrying... (${error.retriesLeft} attempts left)`);
         }
@@ -236,11 +288,10 @@ export class SwapExecutor {
   private async sendPrivateTransaction(
     transaction: VersionedTransaction
   ): Promise<string> {
-    console.log("[TX] Sending PRIVATE transaction via Helius (MEV protected)");
-
     const serializedTx = Buffer.from(transaction.serialize()).toString("base64");
 
     try {
+      // Send transaction with 10-second timeout for the POST request
       const response = await axios.post(
         `https://mainnet.helius-rpc.com/?api-key=${this.heliusApiKey}`,
         {
@@ -261,28 +312,38 @@ export class SwapExecutor {
           headers: {
             "Content-Type": "application/json",
           },
+          timeout: 10000, // 10 second timeout for sending
         }
       );
 
       if (response.data.error) {
         throw new Error(
-          `Helius private tx error: ${JSON.stringify(response.data.error)}`
+          `Helius error: ${JSON.stringify(response.data.error)}`
         );
       }
 
       const signature = response.data.result;
       console.log(`[TX] Private transaction sent: ${signature}`);
+      console.log(`[TX] Waiting for confirmation...`);
 
-      // Wait for confirmation
-      const confirmation = await this.connection.confirmTransaction(
+      // Wait for confirmation with 30-second timeout (same as public tx)
+      const confirmationTimeout = 30000;
+      const confirmationPromise = this.connection.confirmTransaction(
         signature,
         "confirmed"
       );
+
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Confirmation timeout (30s)')), confirmationTimeout)
+      );
+
+      const confirmation = await Promise.race([confirmationPromise, timeoutPromise]);
 
       if (confirmation.value.err) {
         throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
       }
 
+      console.log(`[TX] Private transaction confirmed: ${signature}`);
       return signature;
     } catch (error: any) {
       console.error(`[TX] Private transaction failed: ${error.message}`);
@@ -451,6 +512,147 @@ export class SwapExecutor {
       };
     } catch (error: any) {
       console.error(`[TX] Error:`, error.message);
+      if (error.logs) {
+        console.error(`Transaction logs:`, error.logs);
+      }
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+
+  /**
+   * Execute a SINGLE swap transaction (simpler alternative to atomic arbitrage)
+   * Used for sequential swap mode where each swap is a separate transaction
+   */
+  async executeSingleSwap(
+    poolAddress: string,
+    inputMint: string,
+    outputMint: string,
+    amountIn: Decimal,
+    slippageTolerance: number = 0.01
+  ): Promise<SwapResult> {
+    try {
+      console.log("\n=== EXECUTING SINGLE SWAP ===");
+      console.log(`Pool: ${poolAddress}`);
+      console.log(`Input: ${amountIn.toString()} ${inputMint === SOL_MINT ? "SOL" : "USDC"}`);
+      console.log(`Output: ${outputMint === SOL_MINT ? "SOL" : "USDC"}`);
+      console.log(`Slippage Tolerance: ${slippageTolerance * 100}%`);
+
+      // Validate slippage
+      if (slippageTolerance > this.maxSlippage.toNumber()) {
+        throw new Error(
+          `Slippage ${slippageTolerance} exceeds maximum ${this.maxSlippage}`
+        );
+      }
+
+      // Initialize Orca SDK if needed
+      await this.initializeOrcaSDK();
+
+      if (!this.whirlpoolContext || !this.whirlpoolClient) {
+        throw new Error("Failed to initialize Orca SDK");
+      }
+
+      // Get pool
+      const poolPublicKey = new PublicKey(poolAddress);
+      const whirlpool = await this.whirlpoolClient.getPool(poolPublicKey);
+
+      // Get token decimals
+      const inputDecimals = this.getTokenDecimals(inputMint);
+      const outputDecimals = this.getTokenDecimals(outputMint);
+
+      // Convert amount to native units (BN)
+      const amountInBN = this.decimalToBN(amountIn, inputDecimals);
+
+      console.log(`Amount in (native): ${amountInBN.toString()}`);
+
+      // Validate input/output mints match pool tokens
+      const inputMintPubkey = new PublicKey(inputMint);
+      const outputMintPubkey = new PublicKey(outputMint);
+      const tokenAInfo = whirlpool.getTokenAInfo();
+      const tokenBInfo = whirlpool.getTokenBInfo();
+
+      const isInputTokenA = tokenAInfo.mint.equals(inputMintPubkey);
+      const isInputTokenB = tokenBInfo.mint.equals(inputMintPubkey);
+
+      if (!isInputTokenA && !isInputTokenB) {
+        throw new Error(
+          `Input mint ${inputMint} does not match pool tokens`
+        );
+      }
+
+      const expectedOutputMint = isInputTokenA ? tokenBInfo.mint : tokenAInfo.mint;
+      if (!expectedOutputMint.equals(outputMintPubkey)) {
+        throw new Error(
+          `Output mint ${outputMint} does not match expected output`
+        );
+      }
+
+      // Get swap quote
+      const slippagePercentage = Percentage.fromDecimal(
+        new Decimal(slippageTolerance)
+      );
+
+      console.log("Getting swap quote from Orca SDK...");
+      const quote = await swapQuoteByInputToken(
+        whirlpool,
+        inputMintPubkey,
+        amountInBN,
+        slippagePercentage,
+        ORCA_WHIRLPOOL_PROGRAM_ID,
+        this.whirlpoolContext.fetcher
+      );
+
+      console.log(`Quote received:`);
+      console.log(`  Estimated amount out: ${quote.estimatedAmountOut.toString()}`);
+      console.log(`  Minimum amount out: ${quote.otherAmountThreshold.toString()}`);
+
+      // Build swap transaction
+      console.log("Building swap transaction...");
+      const swapTxBuilder = await whirlpool.swap(quote, this.wallet.publicKey);
+
+      // Build and execute transaction
+      console.log("Sending transaction to Solana network...");
+      const startTime = Date.now();
+      const signature = await swapTxBuilder.buildAndExecute(
+        {
+          maxSupportedTransactionVersion: "legacy",
+          blockhashCommitment: "confirmed",
+          computeBudgetOption: this.maxPriorityFee > 0
+            ? {
+                type: "fixed",
+                priorityFeeLamports: this.maxPriorityFee,
+              }
+            : { type: "none" },
+        },
+        {
+          skipPreflight: false,
+        },
+        "confirmed"
+      );
+
+      const executionTime = Date.now() - startTime;
+
+      console.log(`Transaction confirmed: ${signature}`);
+      console.log(`Explorer: https://solscan.io/tx/${signature}`);
+      console.log(`Execution time: ${executionTime}ms`);
+
+      // Calculate actual output amount
+      const amountOutDecimal = this.bnToDecimal(
+        quote.estimatedAmountOut,
+        outputDecimals
+      );
+
+      return {
+        success: true,
+        signature: signature,
+        amountIn: amountIn.toString(),
+        amountOut: amountOutDecimal.toString(),
+        executionTime: executionTime,
+      };
+    } catch (error: any) {
+      console.error(`[SINGLE SWAP] Error:`, error.message);
       if (error.logs) {
         console.error(`Transaction logs:`, error.logs);
       }

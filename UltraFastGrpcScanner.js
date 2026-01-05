@@ -48,6 +48,7 @@ const common_sdk_1 = require("@orca-so/common-sdk");
 const anchor_1 = require("@coral-xyz/anchor");
 const web3_js_2 = require("@solana/web3.js");
 const bn_js_1 = __importDefault(require("bn.js"));
+const DynamicProfitCalculator_1 = require("./DynamicProfitCalculator");
 dotenv.config();
 /* =========================
    HFT-OPTIMIZED gRPC SCANNER
@@ -91,6 +92,13 @@ class UltraFastGrpcScanner {
         this.slippagePercentage = common_sdk_1.Percentage.fromDecimal(new decimal_js_1.default(slippage));
         this.pool005Pubkey = new web3_js_1.PublicKey(POOLS[0].address);
         this.pool001Pubkey = new web3_js_1.PublicKey(POOLS[1].address);
+        // Initialize DynamicProfitCalculator for accurate fee calculations
+        this.profitCalculator = new DynamicProfitCalculator_1.DynamicProfitCalculator(this.connection, {
+            priorityFeeLamports: parseInt(process.env.PRIORITY_FEE_LAMPORTS || "50000"),
+            computeUnits: 400000,
+            minimumProfitUSDC: parseFloat(process.env.MIN_PROFIT_USDC || "0.001"),
+            solPriceUSD: 125, // Initial estimate, will be updated with pool prices
+        });
         console.log('[HFT] 🚀 ULTRA-FAST HFT Scanner initialized');
         console.log(`[HFT] Mode: PROCESSED commitment (minimum latency)`);
         console.log(`[HFT] Trade Amount: $${this.tradeAmountDecimal.toString()} USDC`);
@@ -323,8 +331,9 @@ class UltraFastGrpcScanner {
     /**
      * Get quote for Direction 1: Buy 0.05% → Sell 0.01%
      * Uses fresh pool objects passed as parameters
+     * Uses DynamicProfitCalculator for accurate net profit after ALL fees
      */
-    async getQuoteDirection1(pool005, pool001) {
+    async getQuoteDirection1(pool005, pool001, logDetails = false) {
         try {
             // Swap 1: USDC -> SOL on 0.05% pool
             const quote1 = await (0, whirlpools_sdk_1.swapQuoteByInputToken)(pool005, // Fresh pool data from caller
@@ -332,11 +341,17 @@ class UltraFastGrpcScanner {
             // Swap 2: SOL -> USDC on 0.01% pool
             const quote2 = await (0, whirlpools_sdk_1.swapQuoteByInputToken)(pool001, // Fresh pool data from caller
             new web3_js_1.PublicKey(constants_1.SOL_MINT), quote1.estimatedAmountOut, this.slippagePercentage, whirlpools_sdk_1.ORCA_WHIRLPOOL_PROGRAM_ID, this.whirlpoolContext.fetcher);
-            const finalOut = new decimal_js_1.default(quote2.estimatedAmountOut.toString()).div(1e6);
-            const profit = finalOut.minus(this.tradeAmountDecimal);
-            const profitPct = profit.div(this.tradeAmountDecimal);
-            const isProfitable = profitPct.gt(MIN_PROFIT_THRESHOLD_DECIMAL) && profitPct.gt(0);
-            return { profitPct, isProfitable, finalOut };
+            // Get current SOL price from pool prices
+            const currentSOLPrice = this.poolPrices.get(POOLS[0].address) || new decimal_js_1.default(125);
+            // Use DynamicProfitCalculator for accurate net profit after ALL fees
+            const analysis = this.profitCalculator.analyzeProfitability(this.tradeAmountDecimal, quote1, quote2, currentSOLPrice, 0.0005, // 0.05% fee for pool005
+            0.0001, // 0.01% fee for pool001
+            logDetails);
+            return {
+                profitPct: analysis.netProfitPct.div(100), // Convert from percentage to decimal
+                isProfitable: analysis.meetsMinimum,
+                finalOut: analysis.swap2Output
+            };
         }
         catch (error) {
             console.error(`[HFT] Direction 1 quote error: ${error.message}`);
@@ -346,8 +361,9 @@ class UltraFastGrpcScanner {
     /**
      * Get quote for Direction 2: Buy 0.01% → Sell 0.05%
      * Uses fresh pool objects passed as parameters
+     * Uses DynamicProfitCalculator for accurate net profit after ALL fees
      */
-    async getQuoteDirection2(pool001, pool005) {
+    async getQuoteDirection2(pool001, pool005, logDetails = false) {
         try {
             // Swap 1: USDC -> SOL on 0.01% pool
             const quote1 = await (0, whirlpools_sdk_1.swapQuoteByInputToken)(pool001, // Fresh pool data from caller
@@ -355,11 +371,17 @@ class UltraFastGrpcScanner {
             // Swap 2: SOL -> USDC on 0.05% pool
             const quote2 = await (0, whirlpools_sdk_1.swapQuoteByInputToken)(pool005, // Fresh pool data from caller
             new web3_js_1.PublicKey(constants_1.SOL_MINT), quote1.estimatedAmountOut, this.slippagePercentage, whirlpools_sdk_1.ORCA_WHIRLPOOL_PROGRAM_ID, this.whirlpoolContext.fetcher);
-            const finalOut = new decimal_js_1.default(quote2.estimatedAmountOut.toString()).div(1e6);
-            const profit = finalOut.minus(this.tradeAmountDecimal);
-            const profitPct = profit.div(this.tradeAmountDecimal);
-            const isProfitable = profitPct.gt(MIN_PROFIT_THRESHOLD_DECIMAL) && profitPct.gt(0);
-            return { profitPct, isProfitable, finalOut };
+            // Get current SOL price from pool prices
+            const currentSOLPrice = this.poolPrices.get(POOLS[0].address) || new decimal_js_1.default(125);
+            // Use DynamicProfitCalculator for accurate net profit after ALL fees
+            const analysis = this.profitCalculator.analyzeProfitability(this.tradeAmountDecimal, quote1, quote2, currentSOLPrice, 0.0001, // 0.01% fee for pool001
+            0.0005, // 0.05% fee for pool005
+            logDetails);
+            return {
+                profitPct: analysis.netProfitPct.div(100), // Convert from percentage to decimal
+                isProfitable: analysis.meetsMinimum,
+                finalOut: analysis.swap2Output
+            };
         }
         catch (error) {
             console.error(`[HFT] Direction 2 quote error: ${error.message}`);

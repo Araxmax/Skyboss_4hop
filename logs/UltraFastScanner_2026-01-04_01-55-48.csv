@@ -1,0 +1,11 @@
+Sl No.,Timestamp,Orca 0.01%,Orca 0.05%,Spread_USD,Spread_PCT,Net Profit,Trade Possible,Failure Reason
+1,2026-01-05 01:55:50 AM,133.909014,133.853253,0.055761,0.0417%,-0.3148%,NO,Negative profit -0.3147% after fees and slippage
+2,2026-01-05 01:55:51 AM,133.890104,133.853253,0.036851,0.0275%,-0.3284%,NO,Negative profit -0.3283% after fees and slippage
+3,2026-01-05 01:55:51 AM,133.890104,133.854387,0.035717,0.0267%,-0.3292%,NO,Negative profit -0.3292% after fees and slippage
+4,2026-01-05 01:55:52 AM,133.819697,133.854387,0.034690,0.0259%,-0.3292%,NO,Negative profit -0.3292% after fees and slippage
+5,2026-01-05 01:55:58 AM,133.824299,133.854387,0.030088,0.0225%,-0.3260%,NO,Negative profit -0.3259% after fees and slippage
+6,2026-01-05 01:55:59 AM,133.894672,133.854387,0.040284,0.0301%,-0.3260%,NO,Negative profit -0.3259% after fees and slippage
+7,2026-01-05 01:56:02 AM,133.952356,133.854387,0.097969,0.0732%,-0.2844%,NO,Negative profit -0.2843% after fees and slippage
+8,2026-01-05 01:56:04 AM,133.894851,133.854387,0.040464,0.0302%,-0.3258%,NO,Negative profit -0.3258% after fees and slippage
+9,2026-01-05 01:56:10 AM,133.847697,133.854387,0.006690,0.0050%,-0.3550%,NO,Negative profit -0.3549% after fees and slippage
+10,2026-01-05 01:56:26 AM,133.876565,133.854387,0.022178,0.0166%,-0.3390%,NO,Negative profit -0.3389% after fees and slippage
