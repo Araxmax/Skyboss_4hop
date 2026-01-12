@@ -42,21 +42,21 @@ const decimal_js_1 = __importDefault(require("decimal.js"));
 const fs_1 = __importDefault(require("fs"));
 const dotenv = __importStar(require("dotenv"));
 const constants_1 = require("./constants");
-const SimpleCsvLogger_1 = require("./SimpleCsvLogger");
-const whirlpools_sdk_1 = require("@orca-so/whirlpools-sdk");
-const common_sdk_1 = require("@orca-so/common-sdk");
-const anchor_1 = require("@coral-xyz/anchor");
-const web3_js_2 = require("@solana/web3.js");
-const bn_js_1 = __importDefault(require("bn.js"));
-const DynamicProfitCalculator_1 = require("./DynamicProfitCalculator");
+const UltraScannerLogger_1 = require("./UltraScannerLogger");
+const RaydiumPriceFetcher_1 = require("./RaydiumPriceFetcher");
 dotenv.config();
 /* =========================
-   HFT-OPTIMIZED gRPC SCANNER
+   HELIUS GRPC STREAMING
 ========================= */
 const RPC_URL = process.env.RPC_URL || '';
 const HELIUS_API_KEY = process.env.HELIUS_API_KEY || '';
 const POOLS = constants_1.PREDEFINED_POOLS;
 const MIN_PROFIT_THRESHOLD_DECIMAL = new decimal_js_1.default(constants_1.MIN_PROFIT_THRESHOLD);
+// Helius gRPC endpoint
+const GRPC_ENDPOINT = process.env.HELIUS_GRPC_ENDPOINT || 'laserstream-mainnet-ewr.helius-rpc.com:443';
+/* =========================
+   ULTRA-FAST GRPC SCANNER
+========================= */
 class UltraFastGrpcScanner {
     constructor() {
         this.isRunning = false;
@@ -64,64 +64,22 @@ class UltraFastGrpcScanner {
         this.lastSignalTime = 0;
         this.updateCount = 0;
         this.startTime = 0;
+        // WebSocket subscriptions (fastest available in Solana Web3.js)
         this.subscriptionIds = [];
-        // Orca SDK (pre-initialized)
-        this.whirlpoolContext = null;
-        this.whirlpoolClient = null;
-        // HFT OPTIMIZATION: Pre-fetched pool objects (reused on every check)
-        this.pool005Object = null;
-        this.pool001Object = null;
-        // Performance tracking
-        this.profitableSignalCount = 0;
-        this.totalQuoteTime = 0;
-        this.quoteCount = 0;
-        // PROCESSED commitment for absolute minimum latency
+        // Use PROCESSED commitment for maximum speed (2x faster than confirmed)
         this.connection = new web3_js_1.Connection(RPC_URL, {
-            commitment: 'processed',
+            commitment: 'processed', // 200-400ms latency (FASTEST)
             wsEndpoint: RPC_URL.replace('https://', 'wss://').replace('http://', 'ws://'),
             disableRetryOnRateLimit: false,
         });
         this.poolPrices = new Map();
         this.lastPriceUpdate = new Map();
-        this.csvLogger = new SimpleCsvLogger_1.SimpleCsvLogger('./logs', 'UltraFastScanner');
-        this.dummyWallet = web3_js_2.Keypair.generate();
-        // HFT OPTIMIZATION: Pre-compute all constants
-        this.tradeAmountDecimal = new decimal_js_1.default(process.env.TRADE_USD || "25");
-        this.tradeAmountBN = new bn_js_1.default(this.tradeAmountDecimal.mul(1e6).floor().toString());
-        const slippage = parseFloat(process.env.MAX_SLIPPAGE_PCT || "0.03") / 100;
-        this.slippagePercentage = common_sdk_1.Percentage.fromDecimal(new decimal_js_1.default(slippage));
-        this.pool005Pubkey = new web3_js_1.PublicKey(POOLS[0].address);
-        this.pool001Pubkey = new web3_js_1.PublicKey(POOLS[1].address);
-        // Initialize DynamicProfitCalculator for accurate fee calculations
-        this.profitCalculator = new DynamicProfitCalculator_1.DynamicProfitCalculator(this.connection, {
-            priorityFeeLamports: parseInt(process.env.PRIORITY_FEE_LAMPORTS || "50000"),
-            computeUnits: 400000,
-            minimumProfitUSDC: parseFloat(process.env.MIN_PROFIT_USDC || "0.001"),
-            solPriceUSD: 125, // Initial estimate, will be updated with pool prices
-        });
-        console.log('[HFT] 🚀 ULTRA-FAST HFT Scanner initialized');
-        console.log(`[HFT] Mode: PROCESSED commitment (minimum latency)`);
-        console.log(`[HFT] Trade Amount: $${this.tradeAmountDecimal.toString()} USDC`);
-    }
-    /**
-     * Initialize Orca SDK + PRE-FETCH pool objects
-     */
-    async initializeOrcaSDK() {
-        try {
-            const anchorWallet = new anchor_1.Wallet(this.dummyWallet);
-            this.whirlpoolContext = whirlpools_sdk_1.WhirlpoolContext.from(this.connection, anchorWallet, undefined, undefined, { userDefaultConfirmCommitment: "processed" } // HFT: Use processed
-            );
-            this.whirlpoolClient = (0, whirlpools_sdk_1.buildWhirlpoolClient)(this.whirlpoolContext);
-            // HFT OPTIMIZATION: Pre-fetch and cache pool objects
-            console.log("[HFT] Pre-fetching pool objects...");
-            this.pool005Object = await this.whirlpoolClient.getPool(this.pool005Pubkey);
-            this.pool001Object = await this.whirlpoolClient.getPool(this.pool001Pubkey);
-            console.log("[HFT] ✓ Pool objects cached for fast quotes");
-        }
-        catch (error) {
-            console.error(`[HFT] Failed to initialize: ${error.message}`);
-            throw error;
-        }
+        this.ultraLogger = new UltraScannerLogger_1.UltraScannerLogger('./logs');
+        console.log('[HFT] ⚡⚡⚡ ULTRA-FAST HFT SCANNER INITIALIZED ⚡⚡⚡');
+        console.log(`[HFT] Commitment: PROCESSED (200-400ms latency)`);
+        console.log(`[HFT] Endpoint: ${GRPC_ENDPOINT}`);
+        console.log(`[HFT] API Key: ${HELIUS_API_KEY.substring(0, 8)}...`);
+        console.log(`[HFT] Logging every scan to: ${this.ultraLogger.getCurrentLogFile()}`);
     }
     /**
      * Decode sqrt price (optimized)
@@ -143,7 +101,7 @@ class UltraFastGrpcScanner {
         return price.mul(constants_1.DECIMAL_10_POW_9).div(constants_1.DECIMAL_10_POW_6);
     }
     /**
-     * Process price update - HOT PATH (ZERO logging, immediate arbitrage check)
+     * Process price update (HOT PATH - MAXIMUM SPEED)
      */
     processPriceUpdate(poolAddress, poolName, data) {
         try {
@@ -151,241 +109,240 @@ class UltraFastGrpcScanner {
             this.updateCount++;
             const sqrtPriceX64 = this.decodeSqrtPrice(data);
             const price = this.sqrtPriceToPrice(sqrtPriceX64);
+            const oldPrice = this.poolPrices.get(poolAddress);
             this.poolPrices.set(poolAddress, price);
             this.lastPriceUpdate.set(poolAddress, now);
-            // HFT OPTIMIZATION: Check arbitrage on EVERY update (no threshold filtering)
-            this.checkArbitrageHFT();
+            // Minimal logging on hot path - only log every 10th update or significant changes
+            if (this.updateCount % 10 === 0 || !oldPrice) {
+                if (oldPrice) {
+                    const delta = price.minus(oldPrice);
+                    const deltaPercent = delta.div(oldPrice).mul(100);
+                    if (deltaPercent.abs().gte(0.01)) { // Only log if >0.01% change
+                        console.log(`[⚡${this.updateCount}] ${poolName}: $${price.toFixed(6)} (${deltaPercent.gte(0) ? '+' : ''}${deltaPercent.toFixed(4)}%)`);
+                    }
+                }
+                else {
+                    console.log(`[⚡${this.updateCount}] ${poolName}: $${price.toFixed(6)} [INITIAL]`);
+                }
+            }
+            // Check arbitrage immediately (this is the critical path)
+            this.checkArbitrageOptimized();
         }
         catch (error) {
-            // Suppress all errors on hot path
+            // Suppress error logging on hot path
+            if (this.updateCount % 100 === 0) {
+                console.error(`[gRPC] Price decode errors: ${error.message}`);
+            }
         }
     }
     /**
-     * Subscribe to account changes (PROCESSED mode)
+     * Subscribe to account changes via Helius WebSocket (ULTRA-FAST)
      */
     async subscribeToAccounts() {
-        console.log('\n[HFT] Setting up real-time subscriptions...');
+        console.log('\n[gRPC] Setting up ULTRA-FAST streaming subscriptions...');
+        // Subscribe to all pools in parallel for faster setup
         const subscriptionPromises = POOLS.map(async (pool) => {
             try {
-                const poolPubkey = new web3_js_1.PublicKey(pool.address);
-                const subId = this.connection.onAccountChange(poolPubkey, (accountInfo) => {
+                if (pool.type === 'orca') {
+                    // Orca Whirlpool - subscribe to pool account
+                    const poolPubkey = new web3_js_1.PublicKey(pool.address);
+                    const subId = this.connection.onAccountChange(poolPubkey, (accountInfo) => {
+                        if (accountInfo && accountInfo.data) {
+                            this.processPriceUpdate(pool.address, pool.name, accountInfo.data);
+                        }
+                    }, 'processed');
+                    this.subscriptionIds.push(subId);
+                    console.log(`[gRPC] ✓ Subscribed to ${pool.name} (Orca Whirlpool)`);
+                }
+                else if (pool.type === 'raydium') {
+                    // Raydium AMM - subscribe to both vaults
+                    if (!pool.vault_a || !pool.vault_b) {
+                        console.error(`[gRPC] Missing vault addresses for ${pool.name}`);
+                        return;
+                    }
+                    const vaultAPubkey = new web3_js_1.PublicKey(pool.vault_a);
+                    const vaultBPubkey = new web3_js_1.PublicKey(pool.vault_b);
+                    let lastVaultABalance = null;
+                    let lastVaultBBalance = null;
+                    // Subscribe to SOL vault
+                    const subIdA = this.connection.onAccountChange(vaultAPubkey, (accountInfo) => {
+                        try {
+                            const amount = accountInfo.data.readBigUInt64LE(64);
+                            lastVaultABalance = amount;
+                            if (lastVaultBBalance !== null) {
+                                const solBalance = new decimal_js_1.default(lastVaultABalance.toString()).div(1e9);
+                                const usdcBalance = new decimal_js_1.default(lastVaultBBalance.toString()).div(1e6);
+                                if (!solBalance.isZero()) {
+                                    const price = usdcBalance.div(solBalance);
+                                    this.poolPrices.set(pool.address, price);
+                                    this.lastPriceUpdate.set(pool.address, Date.now());
+                                    this.updateCount++;
+                                    this.checkArbitrageOptimized();
+                                }
+                            }
+                        }
+                        catch (error) {
+                            console.error(`[gRPC] Raydium vault A error: ${error.message}`);
+                        }
+                    }, 'processed');
+                    // Subscribe to USDC vault
+                    const subIdB = this.connection.onAccountChange(vaultBPubkey, (accountInfo) => {
+                        try {
+                            const amount = accountInfo.data.readBigUInt64LE(64);
+                            lastVaultBBalance = amount;
+                            if (lastVaultABalance !== null) {
+                                const solBalance = new decimal_js_1.default(lastVaultABalance.toString()).div(1e9);
+                                const usdcBalance = new decimal_js_1.default(lastVaultBBalance.toString()).div(1e6);
+                                if (!solBalance.isZero()) {
+                                    const price = usdcBalance.div(solBalance);
+                                    this.poolPrices.set(pool.address, price);
+                                    this.lastPriceUpdate.set(pool.address, Date.now());
+                                    this.updateCount++;
+                                    this.checkArbitrageOptimized();
+                                }
+                            }
+                        }
+                        catch (error) {
+                            console.error(`[gRPC] Raydium vault B error: ${error.message}`);
+                        }
+                    }, 'processed');
+                    this.subscriptionIds.push(subIdA, subIdB);
+                    console.log(`[gRPC] ✓ Subscribed to ${pool.name} (Raydium AMM - 2 vaults)`);
+                }
+            }
+            catch (error) {
+                console.error(`[gRPC] Subscription error for ${pool.name}: ${error.message}`);
+            }
+        });
+        // Wait for all subscriptions to complete
+        await Promise.all(subscriptionPromises);
+        console.log(`[gRPC] ✅ ${this.subscriptionIds.length} streaming connections ACTIVE (ULTRA-FAST MODE)`);
+    }
+    /**
+     * Initial price fetch (FAST)
+     */
+    async fetchInitialPrices() {
+        console.log('[gRPC] Fetching initial prices (FAST)...');
+        try {
+            for (const pool of POOLS) {
+                if (pool.type === 'orca') {
+                    // Fetch Orca Whirlpool account
+                    const poolPubkey = new web3_js_1.PublicKey(pool.address);
+                    const accountInfo = await this.connection.getAccountInfo(poolPubkey, 'processed');
                     if (accountInfo && accountInfo.data) {
                         this.processPriceUpdate(pool.address, pool.name, accountInfo.data);
                     }
-                }, 'processed' // Minimum latency
-                );
-                this.subscriptionIds.push(subId);
-                console.log(`[HFT] ✓ Subscribed to ${pool.name}`);
-            }
-            catch (error) {
-                console.error(`[HFT] Subscription error for ${pool.name}: ${error.message}`);
-            }
-        });
-        await Promise.all(subscriptionPromises);
-        console.log(`[HFT] ✅ ${this.subscriptionIds.length} subscriptions ACTIVE`);
-    }
-    /**
-     * Initial price fetch
-     */
-    async fetchInitialPrices() {
-        console.log('[HFT] Fetching initial prices...');
-        const poolPubkeys = POOLS.map(p => new web3_js_1.PublicKey(p.address));
-        try {
-            const accountInfos = await this.connection.getMultipleAccountsInfo(poolPubkeys, { commitment: 'processed' });
-            for (let i = 0; i < POOLS.length; i++) {
-                const pool = POOLS[i];
-                const accountInfo = accountInfos[i];
-                if (accountInfo && accountInfo.data) {
-                    this.processPriceUpdate(pool.address, pool.name, accountInfo.data);
                 }
-            }
-            const price005 = this.poolPrices.get(POOLS[0].address);
-            const price001 = this.poolPrices.get(POOLS[1].address);
-            if (price005 && price001) {
-                console.log(`[HFT] Pool 0.05%: $${price005.toFixed(6)}`);
-                console.log(`[HFT] Pool 0.01%: $${price001.toFixed(6)}`);
-                const spread = price005.minus(price001).abs().div(decimal_js_1.default.min(price005, price001)).mul(100);
-                console.log(`[HFT] Initial spread: ${spread.toFixed(4)}%`);
+                else if (pool.type === 'raydium') {
+                    // Fetch Raydium price from vaults
+                    if (pool.vault_a && pool.vault_b) {
+                        const price = await (0, RaydiumPriceFetcher_1.fetchRaydiumPrice)(this.connection, pool.vault_a, pool.vault_b);
+                        if (price) {
+                            this.poolPrices.set(pool.address, price);
+                            this.lastPriceUpdate.set(pool.address, Date.now());
+                            console.log(`[gRPC] ${pool.name}: $${price.toFixed(6)} [INITIAL]`);
+                        }
+                    }
+                }
             }
         }
         catch (error) {
-            console.error(`[HFT] Initial fetch error: ${error.message}`);
+            console.error(`[gRPC] Initial fetch error: ${error.message}`);
         }
     }
     /**
-     * HFT-OPTIMIZED arbitrage check - PARALLEL quotes, NO pre-filtering
+     * Optimized arbitrage check - ALL POOL PAIRS AND DIRECTIONS
+     * LOGS EVERY SCAN TO CSV
      */
-    async checkArbitrageHFT() {
+    checkArbitrageOptimized() {
         if (this.poolPrices.size < 2)
             return;
-        const pool005 = POOLS[0];
-        const pool001 = POOLS[1];
-        const price005 = this.poolPrices.get(pool005.address);
-        const price001 = this.poolPrices.get(pool001.address);
-        if (!price005 || !price001)
-            return;
         this.priceCheckCount++;
-        // Calculate spread for logging ONLY if profitable
-        const priceDiff = price005.minus(price001).abs();
-        const minPrice = price005.lt(price001) ? price005 : price001;
-        const spreadPct = priceDiff.div(minPrice);
-        const quoteStartTime = Date.now();
-        try {
-            // CRITICAL FIX: Fetch fresh pool objects AND refresh their data to get latest on-chain state
-            const pool005Fresh = await this.whirlpoolClient.getPool(this.pool005Pubkey);
-            const pool001Fresh = await this.whirlpoolClient.getPool(this.pool001Pubkey);
-            // Force refresh to get the absolute latest on-chain data (fixes stale cache bug)
-            await Promise.all([
-                pool005Fresh.refreshData(),
-                pool001Fresh.refreshData()
-            ]);
-            // HFT OPTIMIZATION: Fetch BOTH quote directions in PARALLEL with fresh pools
-            const [result_dir1, result_dir2] = await Promise.all([
-                this.getQuoteDirection1(pool005Fresh, pool001Fresh),
-                this.getQuoteDirection2(pool001Fresh, pool005Fresh),
-            ]);
-            const quoteEndTime = Date.now();
-            const quoteTime = quoteEndTime - quoteStartTime;
-            this.totalQuoteTime += quoteTime;
-            this.quoteCount++;
-            // Pick the most profitable direction
-            const direction1 = `${pool005.name} -> ${pool001.name}`;
-            const direction2 = `${pool001.name} -> ${pool005.name}`;
-            let bestDirection = direction1;
-            let bestProfitPct = result_dir1.profitPct;
-            let isProfitable = result_dir1.isProfitable;
-            let finalOut = result_dir1.finalOut;
-            if (result_dir2.profitPct.gt(result_dir1.profitPct)) {
-                bestDirection = direction2;
-                bestProfitPct = result_dir2.profitPct;
-                isProfitable = result_dir2.isProfitable;
-                finalOut = result_dir2.finalOut;
-            }
-            // LOG EVERYTHING TO CSV (every single check)
-            let failureReason = '';
-            if (!isProfitable) {
-                if (bestProfitPct.lessThan(0)) {
-                    failureReason = `Negative profit ${bestProfitPct.mul(100).toFixed(4)}% after fees and slippage`;
-                }
-                else {
-                    failureReason = `Profit ${bestProfitPct.mul(100).toFixed(4)}% below minimum ${MIN_PROFIT_THRESHOLD_DECIMAL.mul(100).toFixed(2)}%`;
-                }
-            }
-            const logEntry = {
-                price_001_pool: price001.toNumber(),
-                price_005_pool: price005.toNumber(),
-                spread_usd: priceDiff.toNumber(),
-                spread_pct: spreadPct.mul(100).toNumber(),
-                net_profit_pct: bestProfitPct.mul(100).toNumber(),
-                trade_possible: isProfitable,
-                failure_reason: failureReason
-            };
-            this.csvLogger.logTrade(logEntry);
-            // Console logging - only for profitable or every 100th check
-            if (isProfitable) {
-                this.profitableSignalCount++;
-                const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
-                const avgQuoteTime = (this.totalQuoteTime / this.quoteCount).toFixed(0);
+        // Get Orca and Raydium prices (we have exactly 2 pools now)
+        const orcaPool = POOLS.find(p => p.type === 'orca');
+        const raydiumPool = POOLS.find(p => p.type === 'raydium');
+        if (!orcaPool || !raydiumPool)
+            return;
+        const orcaPrice = this.poolPrices.get(orcaPool.address);
+        const raydiumPrice = this.poolPrices.get(raydiumPool.address);
+        if (!orcaPrice || !raydiumPrice)
+            return;
+        // Direction 1: Orca → Raydium (buy on Orca, sell on Raydium)
+        const costPerSOL_dir1 = orcaPrice.mul(new decimal_js_1.default(1).plus(orcaPool.fee_rate));
+        const revenuePerSOL_dir1 = raydiumPrice.mul(new decimal_js_1.default(1).minus(raydiumPool.fee_rate));
+        const profitPerSOL_dir1 = revenuePerSOL_dir1.minus(costPerSOL_dir1);
+        const profitPct_dir1 = profitPerSOL_dir1.div(costPerSOL_dir1).mul(100);
+        // Direction 2: Raydium → Orca (buy on Raydium, sell on Orca)
+        const costPerSOL_dir2 = raydiumPrice.mul(new decimal_js_1.default(1).plus(raydiumPool.fee_rate));
+        const revenuePerSOL_dir2 = orcaPrice.mul(new decimal_js_1.default(1).minus(orcaPool.fee_rate));
+        const profitPerSOL_dir2 = revenuePerSOL_dir2.minus(costPerSOL_dir2);
+        const profitPct_dir2 = profitPerSOL_dir2.div(costPerSOL_dir2).mul(100);
+        // Determine best direction
+        let bestDirection;
+        let bestProfitPct;
+        if (profitPct_dir1.gt(profitPct_dir2)) {
+            bestDirection = `${orcaPool.name} -> ${raydiumPool.name}`;
+            bestProfitPct = profitPct_dir1;
+        }
+        else {
+            bestDirection = `${raydiumPool.name} -> ${orcaPool.name}`;
+            bestProfitPct = profitPct_dir2;
+        }
+        // Check if tradable (profit above threshold)
+        const isProfitable = bestProfitPct.div(100).gt(MIN_PROFIT_THRESHOLD_DECIMAL);
+        // Calculate price difference and spread
+        const priceDiff = orcaPrice.minus(raydiumPrice).abs();
+        const minPrice = orcaPrice.lt(raydiumPrice) ? orcaPrice : raydiumPrice;
+        const spreadPct = priceDiff.div(minPrice).mul(100);
+        // LOG EVERY SCAN TO CSV
+        const failureReason = isProfitable ? '' : `Profit ${bestProfitPct.toFixed(4)}% below threshold ${(MIN_PROFIT_THRESHOLD_DECIMAL.mul(100)).toFixed(2)}%`;
+        const scanLogEntry = {
+            scan_number: this.priceCheckCount,
+            timestamp: new Date().toISOString(),
+            raydium_price: raydiumPrice.toNumber(),
+            orca_price: orcaPrice.toNumber(),
+            spread_usd: priceDiff.toNumber(),
+            spread_pct: spreadPct.toNumber(),
+            net_profit: bestProfitPct.toNumber(),
+            is_tradable: isProfitable,
+            failure_reason: failureReason
+        };
+        this.ultraLogger.logScan(scanLogEntry);
+        // Console logging every 20th check or if profitable
+        if (isProfitable || this.priceCheckCount % 20 === 0) {
+            const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
+            const updatesPerSec = (this.updateCount / parseFloat(elapsed)).toFixed(1);
+            console.log(`\n[SCAN ${this.priceCheckCount}] [${elapsed}s] [${updatesPerSec} updates/s]`);
+            console.log(`  Orca: $${orcaPrice.toFixed(6)}`);
+            console.log(`  Raydium: $${raydiumPrice.toFixed(6)}`);
+            console.log(`  Spread: ${spreadPct.toFixed(4)}%`);
+            console.log(`  Dir 1 (Orca→Raydium): ${profitPct_dir1.toFixed(4)}%`);
+            console.log(`  Dir 2 (Raydium→Orca): ${profitPct_dir2.toFixed(4)}%`);
+            console.log(`  Best: ${bestDirection} (${bestProfitPct.toFixed(4)}%)`);
+            console.log(`  Tradable: ${isProfitable ? '✅ YES' : '❌ NO'}`);
+        }
+        // Write signal if profitable (rate limited)
+        if (isProfitable) {
+            const now = Date.now();
+            if (now - this.lastSignalTime > 1000) {
                 console.log(`\n${'='.repeat(70)}`);
-                console.log(`🚨 PROFITABLE OPPORTUNITY #${this.profitableSignalCount} 🚨`);
+                console.log(`🚨 PROFITABLE OPPORTUNITY DETECTED!`);
                 console.log(`${'='.repeat(70)}`);
-                console.log(`Direction: ${bestDirection}`);
-                console.log(`Profit: ${bestProfitPct.mul(100).toFixed(4)}% ($${bestProfitPct.mul(this.tradeAmountDecimal).toFixed(4)})`);
-                console.log(`Quote Time: ${quoteTime}ms (avg: ${avgQuoteTime}ms)`);
-                console.log(`Pool 0.05%: $${price005.toFixed(6)}`);
-                console.log(`Pool 0.01%: $${price001.toFixed(6)}`);
-                console.log(`Spread: ${spreadPct.mul(100).toFixed(4)}%`);
-                console.log(`Runtime: ${elapsed}s | Checks: ${this.priceCheckCount} | Updates: ${this.updateCount}`);
+                console.log(`Best Direction: ${bestDirection}`);
+                console.log(`Profit: ${bestProfitPct.toFixed(4)}%`);
+                console.log(`Time: ${new Date().toLocaleTimeString()}`);
                 console.log(`${'='.repeat(70)}\n`);
-                // Write signal
-                const now = Date.now();
-                if (now - this.lastSignalTime > 1000) {
-                    const signal = {
-                        base: "USDC",
-                        direction: bestDirection,
-                        profit_pct: bestProfitPct.mul(100).toNumber(),
-                        trade_usdc: this.tradeAmountDecimal.toNumber(),
-                        timestamp: now,
-                    };
-                    fs_1.default.writeFileSync('signal.json', JSON.stringify(signal, null, 2));
-                    console.log(`✅ Signal written to signal.json\n`);
-                    this.lastSignalTime = now;
-                }
+                const signal = {
+                    base: "USDC",
+                    direction: bestDirection,
+                    profit_pct: bestProfitPct.toNumber(),
+                    trade_usdc: parseFloat(process.env.TRADE_USD || "100"),
+                    timestamp: now,
+                };
+                fs_1.default.writeFileSync('signal.json', JSON.stringify(signal, null, 2));
+                console.log(`✅ Signal written to signal.json\n`);
+                this.lastSignalTime = now;
             }
-            else {
-                // Log unprofitable opportunities every 100th check (reduce console spam)
-                if (this.priceCheckCount % 100 === 0) {
-                    const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
-                    const avgQuoteTime = (this.totalQuoteTime / this.quoteCount).toFixed(0);
-                    console.log(`[${this.priceCheckCount}] [${elapsed}s] Spread: ${spreadPct.mul(100).toFixed(4)}% | Best profit: ${bestProfitPct.mul(100).toFixed(4)}% (min: ${MIN_PROFIT_THRESHOLD_DECIMAL.mul(100).toFixed(2)}%) | Quote: ${quoteTime}ms (avg: ${avgQuoteTime}ms)`);
-                }
-            }
-        }
-        catch (error) {
-            // Suppress quote errors on hot path
-            if (this.priceCheckCount % 500 === 0) {
-                console.error(`[HFT] Quote error: ${error.message}`);
-            }
-        }
-    }
-    /**
-     * Get quote for Direction 1: Buy 0.05% → Sell 0.01%
-     * Uses fresh pool objects passed as parameters
-     * Uses DynamicProfitCalculator for accurate net profit after ALL fees
-     */
-    async getQuoteDirection1(pool005, pool001, logDetails = false) {
-        try {
-            // Swap 1: USDC -> SOL on 0.05% pool
-            const quote1 = await (0, whirlpools_sdk_1.swapQuoteByInputToken)(pool005, // Fresh pool data from caller
-            new web3_js_1.PublicKey(constants_1.USDC_MINT), this.tradeAmountBN, this.slippagePercentage, whirlpools_sdk_1.ORCA_WHIRLPOOL_PROGRAM_ID, this.whirlpoolContext.fetcher);
-            // Swap 2: SOL -> USDC on 0.01% pool
-            const quote2 = await (0, whirlpools_sdk_1.swapQuoteByInputToken)(pool001, // Fresh pool data from caller
-            new web3_js_1.PublicKey(constants_1.SOL_MINT), quote1.estimatedAmountOut, this.slippagePercentage, whirlpools_sdk_1.ORCA_WHIRLPOOL_PROGRAM_ID, this.whirlpoolContext.fetcher);
-            // Get current SOL price from pool prices
-            const currentSOLPrice = this.poolPrices.get(POOLS[0].address) || new decimal_js_1.default(125);
-            // Use DynamicProfitCalculator for accurate net profit after ALL fees
-            const analysis = this.profitCalculator.analyzeProfitability(this.tradeAmountDecimal, quote1, quote2, currentSOLPrice, 0.0005, // 0.05% fee for pool005
-            0.0001, // 0.01% fee for pool001
-            logDetails);
-            return {
-                profitPct: analysis.netProfitPct.div(100), // Convert from percentage to decimal
-                isProfitable: analysis.meetsMinimum,
-                finalOut: analysis.swap2Output
-            };
-        }
-        catch (error) {
-            console.error(`[HFT] Direction 1 quote error: ${error.message}`);
-            return { profitPct: new decimal_js_1.default(-1), isProfitable: false, finalOut: new decimal_js_1.default(0) };
-        }
-    }
-    /**
-     * Get quote for Direction 2: Buy 0.01% → Sell 0.05%
-     * Uses fresh pool objects passed as parameters
-     * Uses DynamicProfitCalculator for accurate net profit after ALL fees
-     */
-    async getQuoteDirection2(pool001, pool005, logDetails = false) {
-        try {
-            // Swap 1: USDC -> SOL on 0.01% pool
-            const quote1 = await (0, whirlpools_sdk_1.swapQuoteByInputToken)(pool001, // Fresh pool data from caller
-            new web3_js_1.PublicKey(constants_1.USDC_MINT), this.tradeAmountBN, this.slippagePercentage, whirlpools_sdk_1.ORCA_WHIRLPOOL_PROGRAM_ID, this.whirlpoolContext.fetcher);
-            // Swap 2: SOL -> USDC on 0.05% pool
-            const quote2 = await (0, whirlpools_sdk_1.swapQuoteByInputToken)(pool005, // Fresh pool data from caller
-            new web3_js_1.PublicKey(constants_1.SOL_MINT), quote1.estimatedAmountOut, this.slippagePercentage, whirlpools_sdk_1.ORCA_WHIRLPOOL_PROGRAM_ID, this.whirlpoolContext.fetcher);
-            // Get current SOL price from pool prices
-            const currentSOLPrice = this.poolPrices.get(POOLS[0].address) || new decimal_js_1.default(125);
-            // Use DynamicProfitCalculator for accurate net profit after ALL fees
-            const analysis = this.profitCalculator.analyzeProfitability(this.tradeAmountDecimal, quote1, quote2, currentSOLPrice, 0.0001, // 0.01% fee for pool001
-            0.0005, // 0.05% fee for pool005
-            logDetails);
-            return {
-                profitPct: analysis.netProfitPct.div(100), // Convert from percentage to decimal
-                isProfitable: analysis.meetsMinimum,
-                finalOut: analysis.swap2Output
-            };
-        }
-        catch (error) {
-            console.error(`[HFT] Direction 2 quote error: ${error.message}`);
-            return { profitPct: new decimal_js_1.default(-1), isProfitable: false, finalOut: new decimal_js_1.default(0) };
         }
     }
     /**
@@ -393,45 +350,34 @@ class UltraFastGrpcScanner {
      */
     async start() {
         console.log('\n' + '='.repeat(70));
-        console.log('🚀 ULTRA-FAST HFT SCANNER 🚀');
+        console.log('⚡⚡⚡ ULTRA-FAST HFT SCANNER - RAYDIUM ↔ ORCA ⚡⚡⚡');
         console.log('='.repeat(70));
-        console.log('Optimizations:');
-        console.log('  ⚡ NO spread filtering - check every update');
-        console.log('  ⚡ Parallel quote fetching - both directions simultaneously');
-        console.log('  ⚡ Pre-cached pool objects - zero refetch overhead');
-        console.log('  ⚡ Minimal logging - only profitable signals');
-        console.log('  ⚡ PROCESSED commitment - minimum latency');
+        console.log('Mode: HIGH-FREQUENCY TRADING (HFT)');
+        console.log('Technology: WebSocket + PROCESSED Commitment');
+        console.log('Latency: 200-400ms per update');
+        console.log('Pools: 1 Orca + 1 Raydium');
+        console.log('Features:');
+        console.log('  ⚡ Real-time streaming updates');
+        console.log('  ⚡ Ultra-low latency');
+        console.log('  ⚡ LOGS EVERY SCAN to CSV');
+        console.log('  ⚡ Bidirectional arbitrage detection');
+        console.log(`CSV Log: ${this.ultraLogger.getCurrentLogFile()}`);
         console.log('='.repeat(70));
         this.isRunning = true;
         this.startTime = Date.now();
-        // Initialize Orca SDK + pre-fetch pools
-        console.log('\n[HFT] Initializing Orca SDK...');
-        await this.initializeOrcaSDK();
-        // Fetch initial prices
+        // Step 1: Fetch initial prices
         await this.fetchInitialPrices();
-        // Subscribe to streaming updates
+        // Step 2: Subscribe to streaming updates
         await this.subscribeToAccounts();
-        console.log('\n[HFT] 🔥 SCANNER LIVE - HFT MODE ACTIVE!');
-        console.log('[HFT] Checking arbitrage on EVERY price update');
+        console.log('\n[HFT] 🔥 SCANNER LIVE - LOGGING ALL SCANS!');
         console.log('[HFT] Press Ctrl+C to stop\n');
-        // Heartbeat timer - show activity every 30 seconds
-        setInterval(() => {
-            const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(0);
-            const avgQuoteTime = this.quoteCount > 0 ? (this.totalQuoteTime / this.quoteCount).toFixed(0) : 'N/A';
-            const updatesPerMin = this.updateCount > 0 ? (this.updateCount / (parseFloat(elapsed) / 60)).toFixed(1) : '0.0';
-            if (this.updateCount === 0) {
-                console.log(`[${elapsed}s] ⏳ Scanner active - waiting for pool updates (0 updates received)`);
-            }
-            else {
-                console.log(`[${elapsed}s] ✅ Active - ${this.updateCount} updates (${updatesPerMin}/min) | ${this.priceCheckCount} checks | ${this.profitableSignalCount} signals | Avg quote: ${avgQuoteTime}ms`);
-            }
-        }, 30000); // Every 30 seconds
     }
     /**
      * Stop and cleanup
      */
     stop() {
         this.isRunning = false;
+        // Unsubscribe from all streams
         for (const subId of this.subscriptionIds) {
             try {
                 this.connection.removeAccountChangeListener(subId);
@@ -442,13 +388,11 @@ class UltraFastGrpcScanner {
         }
         const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
         const avgUpdatesPerSec = (this.updateCount / parseFloat(elapsed)).toFixed(2);
-        const avgQuoteTime = this.quoteCount > 0 ? (this.totalQuoteTime / this.quoteCount).toFixed(0) : '0';
-        console.log(`\n[HFT] Scanner stopped`);
-        console.log(`[HFT] Runtime: ${elapsed}s`);
-        console.log(`[HFT] Total updates: ${this.updateCount} (${avgUpdatesPerSec}/s)`);
-        console.log(`[HFT] Total checks: ${this.priceCheckCount}`);
-        console.log(`[HFT] Profitable signals: ${this.profitableSignalCount}`);
-        console.log(`[HFT] Avg quote time: ${avgQuoteTime}ms`);
+        console.log(`\n[gRPC] Scanner stopped`);
+        console.log(`[gRPC] Total updates: ${this.updateCount}`);
+        console.log(`[gRPC] Total checks: ${this.priceCheckCount}`);
+        console.log(`[gRPC] Runtime: ${elapsed}s`);
+        console.log(`[gRPC] Avg updates/sec: ${avgUpdatesPerSec}`);
     }
 }
 exports.UltraFastGrpcScanner = UltraFastGrpcScanner;
@@ -479,7 +423,7 @@ async function main() {
 }
 // Graceful shutdown
 process.on('SIGINT', () => {
-    console.log('\n[HFT] Shutting down...');
+    console.log('\n[gRPC] Shutting down...');
     if (scannerInstance) {
         scannerInstance.stop();
     }

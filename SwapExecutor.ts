@@ -6,7 +6,14 @@ import {
   VersionedTransaction,
   TransactionMessage,
   ComputeBudgetProgram,
+  SystemProgram,
 } from "@solana/web3.js";
+import {
+  getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction,
+  getAccount,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 import Decimal from "decimal.js";
 import BN from "bn.js";
 import * as dotenv from "dotenv";
@@ -21,6 +28,7 @@ import { Percentage } from "@orca-so/common-sdk";
 import { SOL_MINT, USDC_MINT } from "./constants";
 import axios from "axios";
 import pRetry from "p-retry";
+import { RpcConnectionManager } from "./RpcConnectionManager";
 
 dotenv.config();
 
@@ -118,6 +126,7 @@ export class SwapExecutor {
   private maxRetries: number;
   private retryDelay: number;
   private transactionDeadline: number; // seconds
+  private rpcManager: RpcConnectionManager | null = null;
 
   constructor(
     connection: Connection,
@@ -130,6 +139,7 @@ export class SwapExecutor {
       maxRetries?: number;
       retryDelay?: number;
       transactionDeadline?: number;
+      rpcManager?: RpcConnectionManager;
     } = {}
   ) {
     this.connection = connection;
@@ -141,6 +151,17 @@ export class SwapExecutor {
     this.maxRetries = config.maxRetries ?? 3;
     this.retryDelay = config.retryDelay ?? 1000;
     this.transactionDeadline = config.transactionDeadline ?? 30; // 30 seconds
+    this.rpcManager = config.rpcManager || null;
+  }
+
+  /**
+   * Get connection with RPC Manager fallback
+   */
+  private getActiveConnection(): Connection {
+    if (this.rpcManager) {
+      return this.rpcManager.getConnection();
+    }
+    return this.connection;
   }
 
   /**
@@ -153,9 +174,12 @@ export class SwapExecutor {
 
     const anchorWallet = new AnchorWalletAdapter(this.wallet);
 
+    // Use active connection (with RPC manager if available)
+    const activeConnection = this.getActiveConnection();
+
     // Create WhirlpoolContext
     this.whirlpoolContext = WhirlpoolContext.from(
-      this.connection,
+      activeConnection,
       anchorWallet,
       undefined, // fetcher (will use default)
       undefined, // lookupTableFetcher
@@ -166,6 +190,59 @@ export class SwapExecutor {
 
     // Create WhirlpoolClient
     this.whirlpoolClient = buildWhirlpoolClient(this.whirlpoolContext);
+  }
+
+  /**
+   * Ensure wSOL Associated Token Account exists for the wallet
+   * This prevents the SDK from adding wrap/unwrap instructions
+   */
+  private async ensureWsolAccount(): Promise<PublicKey> {
+    try {
+      const wsolMint = new PublicKey(SOL_MINT);
+      const wsolATA = await getAssociatedTokenAddress(
+        wsolMint,
+        this.wallet.publicKey
+      );
+
+      // Check if account exists
+      try {
+        await getAccount(this.connection, wsolATA);
+        console.log(`wSOL ATA already exists: ${wsolATA.toBase58()}`);
+        return wsolATA;
+      } catch (error: any) {
+        // Account doesn't exist, create it
+        if (error.name === 'TokenAccountNotFoundError' || error.message?.includes('could not find account')) {
+          console.log(`Creating wSOL ATA: ${wsolATA.toBase58()}`);
+
+          const transaction = new Transaction().add(
+            createAssociatedTokenAccountInstruction(
+              this.wallet.publicKey,  // payer
+              wsolATA,                 // associatedToken
+              this.wallet.publicKey,  // owner
+              wsolMint                 // mint
+            )
+          );
+
+          const { blockhash } = await this.connection.getLatestBlockhash("confirmed");
+          transaction.recentBlockhash = blockhash;
+          transaction.feePayer = this.wallet.publicKey;
+          transaction.sign(this.wallet);
+
+          const signature = await this.connection.sendRawTransaction(
+            transaction.serialize(),
+            { skipPreflight: false }
+          );
+
+          await this.connection.confirmTransaction(signature, "confirmed");
+          console.log(`wSOL ATA created successfully: ${signature}`);
+          return wsolATA;
+        }
+        throw error;
+      }
+    } catch (error: any) {
+      console.error("Error ensuring wSOL account:", error);
+      throw error;
+    }
   }
 
   /**
@@ -226,14 +303,34 @@ export class SwapExecutor {
           setTimeout(() => reject(new Error('Confirmation timeout (30s)')), confirmationTimeout)
         );
 
-        const confirmation = await Promise.race([confirmationPromise, timeoutPromise]);
+        try {
+          const confirmation = await Promise.race([confirmationPromise, timeoutPromise]);
 
-        if (confirmation.value.err) {
-          throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
+          if (confirmation.value.err) {
+            throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
+          }
+
+          console.log(`[TX] Transaction confirmed: ${signature}`);
+          return signature;
+        } catch (timeoutError: any) {
+          // If confirmation times out, check the transaction status manually
+          if (timeoutError.message === 'Confirmation timeout (30s)') {
+            console.log(`[TX] Confirmation timeout - checking transaction status...`);
+            try {
+              const status = await this.connection.getSignatureStatus(signature);
+              if (status?.value?.confirmationStatus === 'confirmed' || status?.value?.confirmationStatus === 'finalized') {
+                console.log(`[TX] Transaction was actually confirmed: ${signature}`);
+                return signature;
+              } else if (status?.value?.err) {
+                console.error(`[TX] Transaction failed:`, status.value.err);
+                throw new Error(`Transaction failed: ${JSON.stringify(status.value.err)}`);
+              }
+            } catch (statusError) {
+              console.error(`[TX] Failed to check transaction status:`, statusError);
+            }
+          }
+          throw timeoutError;
         }
-
-        console.log(`[TX] Transaction confirmed: ${signature}`);
-        return signature;
       } catch (error: any) {
         // Log the actual error before p-retry wraps it
         console.error(`[TX] ERROR in sendFn (attempt ${attemptCount}):`);
@@ -390,7 +487,8 @@ export class SwapExecutor {
     outputMint: string,
     amountIn: Decimal,
     aToB: boolean,
-    slippageTolerance: number = 0.01
+    slippageTolerance: number = 0.01,
+    skipValidation: boolean = false
   ): Promise<SwapResult> {
     try {
       console.log("\n=== EXECUTING SWAP (REAL) ===");
@@ -399,8 +497,8 @@ export class SwapExecutor {
       console.log(`Direction: ${aToB ? "A -> B" : "B -> A"}`);
       console.log(`Slippage Tolerance: ${slippageTolerance * 100}%`);
 
-      // Validate slippage
-      if (slippageTolerance > this.maxSlippage.toNumber()) {
+      // Validate slippage (skip for test swaps)
+      if (!skipValidation && slippageTolerance > this.maxSlippage.toNumber()) {
         throw new Error(
           `Slippage ${slippageTolerance} exceeds maximum ${this.maxSlippage}`
         );
@@ -457,6 +555,7 @@ export class SwapExecutor {
       );
 
       console.log("Getting swap quote from Orca SDK...");
+      const quoteStartTime = Date.now();
       const quote = await swapQuoteByInputToken(
         whirlpool,
         inputMintPubkey,
@@ -469,6 +568,13 @@ export class SwapExecutor {
       console.log(`Quote received:`);
       console.log(`  Estimated amount out: ${quote.estimatedAmountOut.toString()}`);
       console.log(`  Minimum amount out: ${quote.otherAmountThreshold.toString()}`);
+
+      // CRITICAL: Validate quote age before executing
+      const maxQuoteAge = parseFloat(process.env.MAX_QUOTE_AGE_SECONDS || "2") * 1000;
+      const quoteAge = Date.now() - quoteStartTime;
+      if (quoteAge > maxQuoteAge) {
+        throw new Error(`Quote too old (${quoteAge}ms > ${maxQuoteAge}ms). Prices may have changed.`);
+      }
 
       // Build swap transaction
       console.log("Building swap transaction...");
@@ -531,7 +637,8 @@ export class SwapExecutor {
     inputMint: string,
     outputMint: string,
     amountIn: Decimal,
-    slippageTolerance: number = 0.01
+    slippageTolerance: number = 0.01,
+    skipValidation: boolean = false
   ): Promise<SwapResult> {
     try {
       console.log("\n=== EXECUTING SINGLE SWAP ===");
@@ -540,8 +647,8 @@ export class SwapExecutor {
       console.log(`Output: ${outputMint === SOL_MINT ? "SOL" : "USDC"}`);
       console.log(`Slippage Tolerance: ${slippageTolerance * 100}%`);
 
-      // Validate slippage
-      if (slippageTolerance > this.maxSlippage.toNumber()) {
+      // Validate slippage (skip for test swaps)
+      if (!skipValidation && slippageTolerance > this.maxSlippage.toNumber()) {
         throw new Error(
           `Slippage ${slippageTolerance} exceeds maximum ${this.maxSlippage}`
         );
@@ -552,6 +659,12 @@ export class SwapExecutor {
 
       if (!this.whirlpoolContext || !this.whirlpoolClient) {
         throw new Error("Failed to initialize Orca SDK");
+      }
+
+      // Ensure wSOL account exists if trading SOL/wSOL
+      if (inputMint === SOL_MINT || outputMint === SOL_MINT) {
+        console.log("Ensuring wSOL ATA exists before swap...");
+        await this.ensureWsolAccount();
       }
 
       // Get pool
@@ -595,6 +708,7 @@ export class SwapExecutor {
       );
 
       console.log("Getting swap quote from Orca SDK...");
+      const quoteStartTime = Date.now();
       const quote = await swapQuoteByInputToken(
         whirlpool,
         inputMintPubkey,
@@ -608,29 +722,84 @@ export class SwapExecutor {
       console.log(`  Estimated amount out: ${quote.estimatedAmountOut.toString()}`);
       console.log(`  Minimum amount out: ${quote.otherAmountThreshold.toString()}`);
 
+      // CRITICAL: Validate quote age before executing
+      const maxQuoteAge = parseFloat(process.env.MAX_QUOTE_AGE_SECONDS || "2") * 1000;
+      const quoteAge = Date.now() - quoteStartTime;
+      if (quoteAge > maxQuoteAge) {
+        throw new Error(`Quote too old (${quoteAge}ms > ${maxQuoteAge}ms). Prices may have changed.`);
+      }
+
       // Build swap transaction
       console.log("Building swap transaction...");
       const swapTxBuilder = await whirlpool.swap(quote, this.wallet.publicKey);
 
-      // Build and execute transaction
+      // Build transaction manually to avoid automatic wrap/unwrap
+      console.log("Building transaction with direct wSOL (no wrap/unwrap)...");
+      const txPayload = await swapTxBuilder.build();
+
+      // Extract transaction from payload
+      let tx = txPayload.transaction;
+      const signers = txPayload.signers || [];
+
+      // Sign and send transaction
       console.log("Sending transaction to Solana network...");
       const startTime = Date.now();
-      const signature = await swapTxBuilder.buildAndExecute(
-        {
-          maxSupportedTransactionVersion: "legacy",
-          blockhashCommitment: "confirmed",
-          computeBudgetOption: this.maxPriorityFee > 0
-            ? {
-                type: "fixed",
-                priorityFeeLamports: this.maxPriorityFee,
-              }
-            : { type: "none" },
-        },
-        {
-          skipPreflight: false,
-        },
-        "confirmed"
-      );
+
+      // Handle both Transaction and VersionedTransaction types
+      if (tx instanceof VersionedTransaction) {
+        console.log("Using VersionedTransaction...");
+
+        // Sign with wallet (and additional signers if needed)
+        if ('signTransaction' in this.wallet && typeof this.wallet.signTransaction === 'function') {
+          // Sign with additional signers first if needed
+          if (signers.length > 0) {
+            tx.sign(signers);
+          }
+          // Then sign with wallet adapter
+          tx = await (this.wallet.signTransaction as (tx: VersionedTransaction) => Promise<VersionedTransaction>)(tx);
+        } else {
+          // For Keypair wallet, sign the VersionedTransaction with all signers at once
+          const allSigners = signers.length > 0 ? [this.wallet, ...signers] : [this.wallet];
+          tx.sign(allSigners);
+        }
+      } else {
+        console.log("Using legacy Transaction...");
+
+        // Get latest blockhash
+        const { blockhash } = await this.connection.getLatestBlockhash("confirmed");
+        tx.recentBlockhash = blockhash;
+        tx.feePayer = this.wallet.publicKey;
+
+        // Add priority fees if configured
+        if (this.maxPriorityFee > 0) {
+          tx.add(
+            ComputeBudgetProgram.setComputeUnitPrice({
+              microLamports: this.maxPriorityFee,
+            })
+          );
+        }
+
+        // Sign transaction with additional signers if needed
+        if (signers.length > 0) {
+          tx.partialSign(...signers);
+        }
+
+        // Sign with wallet
+        if ('signTransaction' in this.wallet && typeof this.wallet.signTransaction === 'function') {
+          tx = await (this.wallet.signTransaction as (tx: Transaction) => Promise<Transaction>)(tx);
+        } else {
+          tx.sign(this.wallet as Keypair);
+        }
+      }
+
+      // Send transaction
+      const signature = await this.connection.sendRawTransaction(tx.serialize(), {
+        skipPreflight: false,
+        preflightCommitment: "confirmed",
+      });
+
+      // Wait for confirmation
+      const confirmation = await this.connection.confirmTransaction(signature, "confirmed");
 
       const executionTime = Date.now() - startTime;
 
@@ -758,7 +927,8 @@ export class SwapExecutor {
     tokenBMint: string,
     amountToTrade: Decimal,
     direction: "pool1-to-pool2" | "pool2-to-pool1",
-    slippage: number = 0.01
+    slippage: number = 0.01,
+    skipValidation: boolean = false
   ): Promise<ArbitrageResult> {
     const overallStartTime = Date.now();
     console.log("\n" + "=".repeat(70));
@@ -864,7 +1034,16 @@ export class SwapExecutor {
       const swap2TxBuilder = await whirlpool2.swap(quote2, this.wallet.publicKey);
 
       // Combine instructions into single atomic transaction
-      const recentBlockhash = await this.connection.getLatestBlockhash("confirmed");
+      // OPTIMIZATION: Use RPC manager with retry logic for blockhash
+      let recentBlockhash;
+      if (this.rpcManager) {
+        recentBlockhash = await this.rpcManager.executeWithRetry(
+          (conn) => conn.getLatestBlockhash("confirmed"),
+          "getLatestBlockhash"
+        );
+      } else {
+        recentBlockhash = await this.connection.getLatestBlockhash("confirmed");
+      }
 
       // Get instructions from both swaps
       const swap1Instructions = await swap1TxBuilder.compressIx(true);
@@ -892,13 +1071,30 @@ export class SwapExecutor {
       }).compileToV0Message();
 
       const transaction = new VersionedTransaction(message);
-      transaction.sign([this.wallet]);
+
+      // CRITICAL FIX: Collect all signers from both swaps
+      const allSigners: Keypair[] = [this.wallet];
+      if (swap1Instructions.signers && swap1Instructions.signers.length > 0) {
+        // Filter and cast only Keypair signers
+        const keypairSigners = swap1Instructions.signers.filter((s): s is Keypair => s instanceof Keypair);
+        allSigners.push(...keypairSigners);
+      }
+      if (swap2Instructions.signers && swap2Instructions.signers.length > 0) {
+        // Filter and cast only Keypair signers
+        const keypairSigners = swap2Instructions.signers.filter((s): s is Keypair => s instanceof Keypair);
+        allSigners.push(...keypairSigners);
+      }
+
+      // Sign transaction with all required signers
+      transaction.sign(allSigners);
 
       console.log(`[ATOMIC] Sending atomic transaction with ${swap1Instructions.instructions.length + swap2Instructions.instructions.length + 2} instructions...`);
 
-      // Send with retry logic and MEV protection
+      // Send with NO retries (stale quotes would cause failures)
+      // Atomic arbitrage must succeed on first attempt or quotes become invalid
       const signature = await this.sendTransactionWithRetry(transaction, {
         skipPreflight: false,
+        maxRetries: 0, // No retries - quotes become stale
       });
 
       const executionTime = Date.now() - overallStartTime;

@@ -8,7 +8,9 @@
       "Bash(npx ts-node:*)",
       "Bash(del:*)",
       "Bash(npm run build:*)",
-      "Bash(node -p:*)"
+      "Bash(node -p:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run executor:fast:*)"
     ]
   }
 }

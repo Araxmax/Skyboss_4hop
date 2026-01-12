@@ -43,6 +43,7 @@ const fs_1 = __importDefault(require("fs"));
 const dotenv = __importStar(require("dotenv"));
 const constants_1 = require("./constants");
 const CsvLogger_1 = require("./CsvLogger");
+const RaydiumPriceFetcher_1 = require("./RaydiumPriceFetcher");
 dotenv.config();
 /* =========================
    HELIUS GRPC STREAMING
@@ -141,17 +142,72 @@ class GrpcFastScanner {
         // Subscribe to all pools in parallel for faster setup
         const subscriptionPromises = POOLS.map(async (pool) => {
             try {
-                const poolPubkey = new web3_js_1.PublicKey(pool.address);
-                // Use PROCESSED commitment for maximum speed (2x faster)
-                const subId = this.connection.onAccountChange(poolPubkey, (accountInfo) => {
-                    if (accountInfo && accountInfo.data) {
-                        // Process update immediately without any delays
-                        this.processPriceUpdate(pool.address, pool.name, accountInfo.data);
+                if (pool.type === 'orca') {
+                    // Orca Whirlpool - subscribe to pool account
+                    const poolPubkey = new web3_js_1.PublicKey(pool.address);
+                    const subId = this.connection.onAccountChange(poolPubkey, (accountInfo) => {
+                        if (accountInfo && accountInfo.data) {
+                            this.processPriceUpdate(pool.address, pool.name, accountInfo.data);
+                        }
+                    }, 'processed');
+                    this.subscriptionIds.push(subId);
+                    console.log(`[gRPC] ✓ Subscribed to ${pool.name} (Orca Whirlpool)`);
+                }
+                else if (pool.type === 'raydium') {
+                    // Raydium AMM - subscribe to both vaults
+                    if (!pool.vault_a || !pool.vault_b) {
+                        console.error(`[gRPC] Missing vault addresses for ${pool.name}`);
+                        return;
                     }
-                }, 'processed' // processed = ~200-400ms (FASTEST AVAILABLE)
-                );
-                this.subscriptionIds.push(subId);
-                console.log(`[gRPC] ✓ Subscribed to ${pool.name} (PROCESSED mode)`);
+                    const vaultAPubkey = new web3_js_1.PublicKey(pool.vault_a);
+                    const vaultBPubkey = new web3_js_1.PublicKey(pool.vault_b);
+                    let lastVaultABalance = null;
+                    let lastVaultBBalance = null;
+                    // Subscribe to SOL vault
+                    const subIdA = this.connection.onAccountChange(vaultAPubkey, (accountInfo) => {
+                        try {
+                            const amount = accountInfo.data.readBigUInt64LE(64);
+                            lastVaultABalance = amount;
+                            if (lastVaultBBalance !== null) {
+                                const solBalance = new decimal_js_1.default(lastVaultABalance.toString()).div(1e9);
+                                const usdcBalance = new decimal_js_1.default(lastVaultBBalance.toString()).div(1e6);
+                                if (!solBalance.isZero()) {
+                                    const price = usdcBalance.div(solBalance);
+                                    this.poolPrices.set(pool.address, price);
+                                    this.lastPriceUpdate.set(pool.address, Date.now());
+                                    this.updateCount++;
+                                    this.checkArbitrageOptimized();
+                                }
+                            }
+                        }
+                        catch (error) {
+                            console.error(`[gRPC] Raydium vault A error: ${error.message}`);
+                        }
+                    }, 'processed');
+                    // Subscribe to USDC vault
+                    const subIdB = this.connection.onAccountChange(vaultBPubkey, (accountInfo) => {
+                        try {
+                            const amount = accountInfo.data.readBigUInt64LE(64);
+                            lastVaultBBalance = amount;
+                            if (lastVaultABalance !== null) {
+                                const solBalance = new decimal_js_1.default(lastVaultABalance.toString()).div(1e9);
+                                const usdcBalance = new decimal_js_1.default(lastVaultBBalance.toString()).div(1e6);
+                                if (!solBalance.isZero()) {
+                                    const price = usdcBalance.div(solBalance);
+                                    this.poolPrices.set(pool.address, price);
+                                    this.lastPriceUpdate.set(pool.address, Date.now());
+                                    this.updateCount++;
+                                    this.checkArbitrageOptimized();
+                                }
+                            }
+                        }
+                        catch (error) {
+                            console.error(`[gRPC] Raydium vault B error: ${error.message}`);
+                        }
+                    }, 'processed');
+                    this.subscriptionIds.push(subIdA, subIdB);
+                    console.log(`[gRPC] ✓ Subscribed to ${pool.name} (Raydium AMM - 2 vaults)`);
+                }
             }
             catch (error) {
                 console.error(`[gRPC] Subscription error for ${pool.name}: ${error.message}`);
@@ -166,15 +222,26 @@ class GrpcFastScanner {
      */
     async fetchInitialPrices() {
         console.log('[gRPC] Fetching initial prices (FAST)...');
-        const poolPubkeys = POOLS.map(p => new web3_js_1.PublicKey(p.address));
         try {
-            // Use processed commitment for fastest initial fetch
-            const accountInfos = await this.connection.getMultipleAccountsInfo(poolPubkeys, { commitment: 'processed' });
-            for (let i = 0; i < POOLS.length; i++) {
-                const pool = POOLS[i];
-                const accountInfo = accountInfos[i];
-                if (accountInfo && accountInfo.data) {
-                    this.processPriceUpdate(pool.address, pool.name, accountInfo.data);
+            for (const pool of POOLS) {
+                if (pool.type === 'orca') {
+                    // Fetch Orca Whirlpool account
+                    const poolPubkey = new web3_js_1.PublicKey(pool.address);
+                    const accountInfo = await this.connection.getAccountInfo(poolPubkey, 'processed');
+                    if (accountInfo && accountInfo.data) {
+                        this.processPriceUpdate(pool.address, pool.name, accountInfo.data);
+                    }
+                }
+                else if (pool.type === 'raydium') {
+                    // Fetch Raydium price from vaults
+                    if (pool.vault_a && pool.vault_b) {
+                        const price = await (0, RaydiumPriceFetcher_1.fetchRaydiumPrice)(this.connection, pool.vault_a, pool.vault_b);
+                        if (price) {
+                            this.poolPrices.set(pool.address, price);
+                            this.lastPriceUpdate.set(pool.address, Date.now());
+                            console.log(`[gRPC] ${pool.name}: $${price.toFixed(6)} [INITIAL]`);
+                        }
+                    }
                 }
             }
         }
@@ -183,68 +250,84 @@ class GrpcFastScanner {
         }
     }
     /**
-     * Optimized arbitrage check - BOTH DIRECTIONS
+     * Optimized arbitrage check - ALL POOL PAIRS AND DIRECTIONS
      */
     checkArbitrageOptimized() {
         if (this.poolPrices.size < 2)
             return;
-        const pool005 = POOLS[0]; // 0.05% fee pool
-        const pool001 = POOLS[1]; // 0.01% fee pool
-        const price005 = this.poolPrices.get(pool005.address);
-        const price001 = this.poolPrices.get(pool001.address);
-        if (!price005 || !price001)
-            return;
         this.priceCheckCount++;
-        // ========================================
-        // DIRECTION 1: Buy on 0.05% → Sell on 0.01%
-        // ========================================
-        const costPerSOL_dir1 = price005.mul(new decimal_js_1.default(1).plus(pool005.fee_rate)); // Buy on 0.05%
-        const revenuePerSOL_dir1 = price001.mul(new decimal_js_1.default(1).minus(pool001.fee_rate)); // Sell on 0.01%
-        const profitPerSOL_dir1 = revenuePerSOL_dir1.minus(costPerSOL_dir1);
-        const profitPct_dir1 = profitPerSOL_dir1.div(costPerSOL_dir1);
-        const isProfitable_dir1 = profitPct_dir1.gt(MIN_PROFIT_THRESHOLD_DECIMAL) && profitPct_dir1.gt(0);
-        // ========================================
-        // DIRECTION 2: Buy on 0.01% → Sell on 0.05%
-        // ========================================
-        const costPerSOL_dir2 = price001.mul(new decimal_js_1.default(1).plus(pool001.fee_rate)); // Buy on 0.01%
-        const revenuePerSOL_dir2 = price005.mul(new decimal_js_1.default(1).minus(pool005.fee_rate)); // Sell on 0.05%
-        const profitPerSOL_dir2 = revenuePerSOL_dir2.minus(costPerSOL_dir2);
-        const profitPct_dir2 = profitPerSOL_dir2.div(costPerSOL_dir2);
-        const isProfitable_dir2 = profitPct_dir2.gt(MIN_PROFIT_THRESHOLD_DECIMAL) && profitPct_dir2.gt(0);
-        // Calculate spreads
-        const priceDiff = price005.minus(price001).abs();
-        const minPrice = price005.lt(price001) ? price005 : price001;
-        const spreadPct = priceDiff.div(minPrice);
-        // Pick the most profitable direction (or any if checking both)
-        const direction1 = `${pool005.name} -> ${pool001.name}`;
-        const direction2 = `${pool001.name} -> ${pool005.name}`;
-        // Best direction
-        let bestDirection = direction1;
-        let bestProfitPct = profitPct_dir1;
-        let isProfitable = isProfitable_dir1;
-        if (profitPct_dir2.gt(profitPct_dir1)) {
-            bestDirection = direction2;
-            bestProfitPct = profitPct_dir2;
-            isProfitable = isProfitable_dir2;
+        // Find best arbitrage opportunity across all pool pairs
+        let bestDirection = "";
+        let bestProfitPct = new decimal_js_1.default(-1);
+        let bestPool1 = POOLS[0];
+        let bestPool2 = POOLS[1];
+        let bestPrice1 = new decimal_js_1.default(0);
+        let bestPrice2 = new decimal_js_1.default(0);
+        // Check all possible pool pairs
+        for (let i = 0; i < POOLS.length; i++) {
+            for (let j = i + 1; j < POOLS.length; j++) {
+                const pool1 = POOLS[i];
+                const pool2 = POOLS[j];
+                const price1 = this.poolPrices.get(pool1.address);
+                const price2 = this.poolPrices.get(pool2.address);
+                if (!price1 || !price2)
+                    continue;
+                // Direction 1: Buy on pool1 → Sell on pool2
+                const costPerSOL_dir1 = price1.mul(new decimal_js_1.default(1).plus(pool1.fee_rate));
+                const revenuePerSOL_dir1 = price2.mul(new decimal_js_1.default(1).minus(pool2.fee_rate));
+                const profitPerSOL_dir1 = revenuePerSOL_dir1.minus(costPerSOL_dir1);
+                const profitPct_dir1 = profitPerSOL_dir1.div(costPerSOL_dir1);
+                // Direction 2: Buy on pool2 → Sell on pool1
+                const costPerSOL_dir2 = price2.mul(new decimal_js_1.default(1).plus(pool2.fee_rate));
+                const revenuePerSOL_dir2 = price1.mul(new decimal_js_1.default(1).minus(pool1.fee_rate));
+                const profitPerSOL_dir2 = revenuePerSOL_dir2.minus(costPerSOL_dir2);
+                const profitPct_dir2 = profitPerSOL_dir2.div(costPerSOL_dir2);
+                // Check direction 1
+                if (profitPct_dir1.gt(bestProfitPct) && profitPct_dir1.gt(0)) {
+                    bestProfitPct = profitPct_dir1;
+                    bestDirection = `${pool1.name} -> ${pool2.name}`;
+                    bestPool1 = pool1;
+                    bestPool2 = pool2;
+                    bestPrice1 = price1;
+                    bestPrice2 = price2;
+                }
+                // Check direction 2
+                if (profitPct_dir2.gt(bestProfitPct) && profitPct_dir2.gt(0)) {
+                    bestProfitPct = profitPct_dir2;
+                    bestDirection = `${pool2.name} -> ${pool1.name}`;
+                    bestPool1 = pool2;
+                    bestPool2 = pool1;
+                    bestPrice1 = price2;
+                    bestPrice2 = price1;
+                }
+            }
         }
+        const isProfitable = bestProfitPct.gt(MIN_PROFIT_THRESHOLD_DECIMAL);
         // Log every 20th check or if profitable (reduced logging for speed)
         if (isProfitable || this.priceCheckCount % 20 === 0) {
             const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
             const updatesPerSec = (this.updateCount / parseFloat(elapsed)).toFixed(1);
             console.log(`\n[CHECK ${this.priceCheckCount}] [${elapsed}s] [${updatesPerSec} updates/s]`);
-            console.log(`  ${pool005.name}: $${price005.toFixed(6)}`);
-            console.log(`  ${pool001.name}: $${price001.toFixed(6)}`);
-            console.log(`  Spread: ${spreadPct.mul(100).toFixed(4)}%`);
-            console.log(`  Direction 1 (0.05%→0.01%): ${profitPct_dir1.mul(100).toFixed(4)}%`);
-            console.log(`  Direction 2 (0.01%→0.05%): ${profitPct_dir2.mul(100).toFixed(4)}%`);
+            // Log all pool prices
+            for (const pool of POOLS) {
+                const price = this.poolPrices.get(pool.address);
+                if (price) {
+                    console.log(`  ${pool.name}: $${price.toFixed(6)}`);
+                }
+            }
+            // Calculate spread between best pair
+            const priceDiff = bestPrice1.minus(bestPrice2).abs();
+            const minPrice = bestPrice1.lt(bestPrice2) ? bestPrice1 : bestPrice2;
+            const spreadPct = priceDiff.div(minPrice);
+            console.log(`  Spread (${bestPool1.name} vs ${bestPool2.name}): ${spreadPct.mul(100).toFixed(4)}%`);
             console.log(`  Best Direction: ${bestDirection} (${bestProfitPct.mul(100).toFixed(4)}%)`);
             // CSV logging (only log every 20th or if profitable to reduce I/O)
             const logEntry = {
                 timestamp: Date.now().toString(),
                 datetime: new Date().toISOString(),
                 signal_direction: bestDirection,
-                price_001_pool: price001.toNumber(),
-                price_005_pool: price005.toNumber(),
+                price_001_pool: bestPrice2.toNumber(), // approximate for logging
+                price_005_pool: bestPrice1.toNumber(), // approximate for logging
                 spread: priceDiff.toNumber(),
                 spread_pct: spreadPct.mul(100).toNumber(),
                 expected_profit_pct: bestProfitPct.mul(100).toNumber(),

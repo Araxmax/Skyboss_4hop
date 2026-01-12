@@ -1,2 +1,8 @@
 .env 
 *.csv 
+node_modules/ 
+logs/ 
+*.csv 
+.env 
+.DS_Store 
+nul 

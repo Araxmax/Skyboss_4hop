@@ -7,6 +7,7 @@ import { SignalManager, ParsedSignal } from "./SignalManager";
 import { SafetyChecker } from "./SafetyChecker";
 import { CsvLogger, TradeLogEntry } from "./CsvLogger";
 import { SOL_MINT, USDC_MINT, PREDEFINED_POOLS, DECIMAL_2_POW_64, DECIMAL_10_POW_9, DECIMAL_10_POW_6 } from "./constants";
+import { createRpcManagerFromEnv, RpcConnectionManager } from "./RpcConnectionManager";
 
 dotenv.config();
 
@@ -39,12 +40,17 @@ class FastArbitrageExecutor {
   private isRunning: boolean = false;
   private lastExecutionTime: number = 0;
   private executionCount: number = 0;
+  private rpcManager: RpcConnectionManager;
 
   // Performance tracking
   private avgExecutionTimeMs: number = 0;
 
   constructor(config: FastBotConfig) {
     this.config = config;
+
+    // CRITICAL FIX: Initialize RPC Manager for intelligent rate limit handling
+    console.log("[EXECUTOR] Initializing RPC Connection Manager...");
+    this.rpcManager = createRpcManagerFromEnv();
 
     // Use 'confirmed' commitment for balance, but 'processed' for speed
     this.connection = new Connection(config.rpcUrl, {
@@ -65,6 +71,7 @@ class FastArbitrageExecutor {
         maxRetries: 3,
         retryDelay: 1000,
         transactionDeadline: 60, // Increased to 60s for better reliability
+        rpcManager: this.rpcManager, // Pass RPC manager to executor
       }
     );
 
@@ -276,7 +283,8 @@ class FastArbitrageExecutor {
     tokenBMint: string,
     initialAmount: Decimal,
     direction: string,
-    slippage: number
+    slippage: number,
+    skipValidation: boolean = false
   ): Promise<any> {
     console.log("\n" + "=".repeat(70));
     console.log("EXECUTING SEQUENTIAL SWAPS (SINGLE MODE)");
@@ -317,7 +325,8 @@ class FastArbitrageExecutor {
         firstInputMint,
         firstOutputMint,
         initialAmount,
-        slippage
+        slippage,
+        skipValidation
       );
 
       if (!swap1Result.success) {
@@ -344,15 +353,46 @@ class FastArbitrageExecutor {
         secondInputMint,
         secondOutputMint,
         secondSwapAmount,
-        slippage
+        slippage,
+        skipValidation
       );
 
       if (!swap2Result.success) {
         console.log(`[SINGLE] ✗ Swap 2 failed: ${swap2Result.error}`);
         console.log(`[SINGLE] ⚠️  Partial execution - Swap 1 succeeded but Swap 2 failed`);
+        console.log(`[SINGLE] 🔄 Attempting recovery: reversing Swap 1...`);
+
+        // CRITICAL: Attempt to recover by reversing Swap 1
+        try {
+          const recoveryResult = await this.swapExecutor.executeSingleSwap(
+            firstPool, // Reverse direction: sell back on same pool
+            firstOutputMint, // What we got from Swap 1 (SOL)
+            firstInputMint, // What we started with (USDC)
+            new Decimal(swap1Result.amountOut || "0"),
+            this.config.maxSlippage,
+            true // skipValidation = true for emergency recovery
+          );
+
+          if (recoveryResult.success) {
+            console.log(`[SINGLE] ✓ Recovery successful: ${recoveryResult.signature}`);
+            console.log(`[SINGLE]   Recovered: ${recoveryResult.amountOut} ${firstInputMint === tokenBMint ? "USDC" : "SOL"}`);
+            return {
+              success: false,
+              error: `Swap 2 failed but RECOVERED via reverse Swap 1. Net loss: ${recoveryResult.amountOut ? new Decimal(swap1Result.amountIn || "0").minus(recoveryResult.amountOut).toString() : "unknown"}`,
+              swap1: swap1Result,
+              swap2: swap2Result,
+            };
+          } else {
+            console.log(`[SINGLE] ✗ Recovery FAILED: ${recoveryResult.error}`);
+            console.log(`[SINGLE] ⚠️  CRITICAL: Funds stuck in ${firstOutputMint === tokenBMint ? "USDC" : "SOL"}`);
+          }
+        } catch (recoveryError: any) {
+          console.error(`[SINGLE] Recovery error: ${recoveryError.message}`);
+        }
+
         return {
           success: false,
-          error: `Swap 2 failed: ${swap2Result.error} (Partial execution - funds stuck in intermediate token)`,
+          error: `Swap 2 failed: ${swap2Result.error} (Partial execution - check wallet for stuck funds)`,
           swap1: swap1Result,
           swap2: swap2Result,
         };
@@ -501,6 +541,11 @@ class FastArbitrageExecutor {
       // LIVE EXECUTION
       console.log(`[TEST] 🔥 Executing LIVE test swap... (Mode: ${swapMode})`);
 
+      // Use higher slippage for test swaps to ensure completion (even at a loss)
+      // Test swap purpose: validate system works, not profit
+      const testSlippage = 0.05; // 5% for test swap (allows completion even with losses)
+      console.log(`[TEST] Using ${testSlippage * 100}% slippage (higher than normal for test completion)\n`);
+
       let result;
 
       if (swapMode === 'SINGLE') {
@@ -512,7 +557,8 @@ class FastArbitrageExecutor {
           USDC_MINT,
           testAmount,
           direction,
-          this.config.maxSlippage
+          testSlippage,
+          true // skipValidation = true for test swaps
         );
       } else {
         // ATOMIC MODE: One transaction with both swaps
@@ -523,7 +569,8 @@ class FastArbitrageExecutor {
           USDC_MINT,
           testAmount,
           direction,
-          this.config.maxSlippage
+          testSlippage,
+          true // skipValidation = true for test swaps
         );
       }
 
@@ -602,14 +649,15 @@ class FastArbitrageExecutor {
           const signal = this.signalManager.validateAndParseSignal();
 
           if (signal && signal.isValid) {
+            // CRITICAL FIX: Delete signal IMMEDIATELY to prevent race condition
+            // If we delete after processing, the same signal could be picked up twice
+            this.signalManager.archiveSignal(true);
+
             // Rate limit: min 100ms between executions
             const now = Date.now();
             if (now - this.lastExecutionTime >= 100) {
               await this.processSignalFast(signal);
               this.lastExecutionTime = now;
-
-              // Archive signal after processing
-              this.signalManager.archiveSignal(true);
             }
           }
         }
@@ -642,7 +690,7 @@ async function main() {
   const config: FastBotConfig = {
     rpcUrl: process.env.RPC_URL || "",
     walletPath: process.env.WALLET_PATH || "",
-    dryRun: process.env.DRY_RUN === "True",
+    dryRun: process.env.DRY_RUN?.toLowerCase() === "true", // FIXED: Case-insensitive check
     maxSlippage: parseFloat(process.env.MAX_SLIPPAGE_PCT || "0.03"),
     maxPriceImpact: parseFloat(process.env.MAX_PRICE_IMPACT_PCT || "0.02"),
     minProfitPercent: parseFloat(process.env.MIN_SPREAD_PCT || "0.006") / 100,

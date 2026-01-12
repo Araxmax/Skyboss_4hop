@@ -14,31 +14,34 @@ exports.SOL_MINT_PUBKEY = new web3_js_1.PublicKey(exports.SOL_MINT);
 exports.USDC_MINT_PUBKEY = new web3_js_1.PublicKey(exports.USDC_MINT);
 exports.PREDEFINED_POOLS = [
     {
-        name: "SOL/USDC 0.05% [VERIFIED]",
-        address: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
-        fee_rate: 0.0005,
+        name: "SOL/USDC 0.04% Orca [VERIFIED]",
+        address: "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+        fee_rate: 0.0004,
+        type: "orca",
         config: "2LecshUwdy9xi7meFgHtFJQNSKk4KdTrcpvaB56dP2NQ",
-        vault_a: "9RfZwn2Prux6QesG1Noo4HzMEBv3rPndJ2bN2Wwd6a7p",
-        vault_b: "BVNo8ftg2LkkssnWT4ZWdtoFaevnfD6ExYeramwM27pe",
+        vault_a: "EUuUbDcafPrmVTD5M6qoJAoyyNbihBhugADAxRMn5he9",
+        vault_b: "2WLWEuKDgkDUccTpbwYp1GToYktiSB1cXvreHUwiSUVP",
     },
     {
-        name: "SOL/USDC 0.01% [VERIFIED]",
-        address: "83v8iPyZihDEjDdY8RdZddyZNyUtXngz69Lgo9Kt5d6d",
-        fee_rate: 0.0001,
-        config: "2LecshUwdy9xi7meFgHtFJQNSKk4KdTrcpvaB56dP2NQ",
-        vault_a: "D3CDPQLoa9jY1LXCkpUqd3JQDWz8DX1LDE1dhmJt9fq4",
-        vault_b: "dwxR9YF7WwnJJu7bPC4UNcWFpcSsooH6fxbpoa3fTbJ",
+        name: "SOL/USDC Raydium [VERIFIED]",
+        address: "58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2",
+        fee_rate: 0.0025,
+        type: "raydium",
+        vault_a: "DQyrAcCrDXQ7NeoqGgDCZwBvWDcYmFCjSb9JtteuvPpz",
+        vault_b: "HLmqeL62xR1QoZ1HKKbXRrdN1p3phKpxRMb2VVopvBBz",
     },
 ];
 /* =========================
    ARBITRAGE THRESHOLDS
 ========================= */
 // Minimum profit threshold AFTER fees
-// Pool fees: 0.01% + 0.05% = 0.06% total
+// Orca fee: 0.04%
+// Raydium fee: 0.25%
+// Total: 0.29% for Raydium-Orca arbitrage
 // Gas fees: ~$0.02-0.05 per trade
-// Need minimum 0.15% profit to break even
-exports.MIN_PROFIT_THRESHOLD = 0.0015; // 0.15% (realistic minimum)
-exports.OPTIMAL_PROFIT_THRESHOLD = 0.003; // 0.3% (good target)
+// Need minimum 0.35% profit to break even
+exports.MIN_PROFIT_THRESHOLD = 0.0035; // 0.35% (realistic minimum)
+exports.OPTIMAL_PROFIT_THRESHOLD = 0.005; // 0.5% (good target)
 /* =========================
    DECIMAL CONSTANTS (pre-computed for performance)
 ========================= */
