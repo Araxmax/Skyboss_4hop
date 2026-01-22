@@ -44,16 +44,17 @@ const dotenv = __importStar(require("dotenv"));
 const constants_1 = require("./constants");
 const UltraScannerLogger_1 = require("./UltraScannerLogger");
 const RaydiumPriceFetcher_1 = require("./RaydiumPriceFetcher");
+const yellowstone_grpc_1 = __importStar(require("@triton-one/yellowstone-grpc"));
 dotenv.config();
 /* =========================
-   HELIUS GRPC STREAMING
+   QUICKNODE GRPC STREAMING
 ========================= */
 const RPC_URL = process.env.RPC_URL || '';
-const HELIUS_API_KEY = process.env.HELIUS_API_KEY || '';
 const POOLS = constants_1.PREDEFINED_POOLS;
 const MIN_PROFIT_THRESHOLD_DECIMAL = new decimal_js_1.default(constants_1.MIN_PROFIT_THRESHOLD);
-// Helius gRPC endpoint
-const GRPC_ENDPOINT = process.env.HELIUS_GRPC_ENDPOINT || 'laserstream-mainnet-ewr.helius-rpc.com:443';
+// QuickNode gRPC configuration
+const GRPC_ENDPOINT = process.env.QUICKNODE_GRPC_ENDPOINT || 'grpc.quicknode.pro:443';
+const GRPC_TOKEN = process.env.QUICKNODE_GRPC_TOKEN || '';
 /* =========================
    ULTRA-FAST GRPC SCANNER
 ========================= */
@@ -64,12 +65,12 @@ class UltraFastGrpcScanner {
         this.lastSignalTime = 0;
         this.updateCount = 0;
         this.startTime = 0;
-        // WebSocket subscriptions (fastest available in Solana Web3.js)
-        this.subscriptionIds = [];
+        // gRPC client for Yellowstone streaming
+        this.grpcClient = null;
+        this.grpcStream = null;
         // Use PROCESSED commitment for maximum speed (2x faster than confirmed)
         this.connection = new web3_js_1.Connection(RPC_URL, {
             commitment: 'processed', // 200-400ms latency (FASTEST)
-            wsEndpoint: RPC_URL.replace('https://', 'wss://').replace('http://', 'ws://'),
             disableRetryOnRateLimit: false,
         });
         this.poolPrices = new Map();
@@ -77,8 +78,7 @@ class UltraFastGrpcScanner {
         this.ultraLogger = new UltraScannerLogger_1.UltraScannerLogger('./logs');
         console.log('[HFT] ⚡⚡⚡ ULTRA-FAST HFT SCANNER INITIALIZED ⚡⚡⚡');
         console.log(`[HFT] Commitment: PROCESSED (200-400ms latency)`);
-        console.log(`[HFT] Endpoint: ${GRPC_ENDPOINT}`);
-        console.log(`[HFT] API Key: ${HELIUS_API_KEY.substring(0, 8)}...`);
+        console.log(`[HFT] RPC: QuickNode gRPC streaming`);
         console.log(`[HFT] Logging every scan to: ${this.ultraLogger.getCurrentLogFile()}`);
     }
     /**
@@ -136,87 +136,148 @@ class UltraFastGrpcScanner {
         }
     }
     /**
-     * Subscribe to account changes via Helius WebSocket (ULTRA-FAST)
+     * Subscribe to account changes via QuickNode gRPC (ULTRA-FAST)
      */
     async subscribeToAccounts() {
-        console.log('\n[gRPC] Setting up ULTRA-FAST streaming subscriptions...');
-        // Subscribe to all pools in parallel for faster setup
-        const subscriptionPromises = POOLS.map(async (pool) => {
+        console.log('\n[gRPC] Setting up ULTRA-FAST gRPC streaming subscriptions...');
+        if (!GRPC_TOKEN || GRPC_TOKEN === 'YOUR_GRPC_TOKEN_HERE') {
+            throw new Error('QUICKNODE_GRPC_TOKEN not properly configured in .env');
+        }
+        console.log('[gRPC] Connecting to QuickNode Yellowstone gRPC...');
+        console.log(`[gRPC] Endpoint: ${GRPC_ENDPOINT}`);
+        // Initialize gRPC client with proper parameters
+        this.grpcClient = new yellowstone_grpc_1.default(GRPC_ENDPOINT, GRPC_TOKEN, {
+            grpcMaxDecodingMessageSize: 64 * 1024 * 1024, // 64MB
+            grpcMaxEncodingMessageSize: 64 * 1024 * 1024, // 64MB
+        });
+        // Connect to gRPC server
+        try {
+            await this.grpcClient.connect();
+            console.log('[gRPC] ✓ Connected to gRPC server');
+        }
+        catch (error) {
+            console.error('[gRPC] Connection failed:', error.message);
+            console.error('[gRPC] This may indicate:');
+            console.error('[gRPC]   1. QuickNode plan does not include Yellowstone gRPC');
+            console.error('[gRPC]   2. Incorrect gRPC token');
+            console.error('[gRPC]   3. Network connectivity issues');
+            throw error;
+        }
+        // Build account filters for all pools
+        const accountsToWatch = [];
+        // Track Raydium vault state
+        const raydiumVaultStates = new Map();
+        for (const pool of POOLS) {
+            if (pool.type === 'orca') {
+                accountsToWatch.push(pool.address);
+            }
+            else if (pool.type === 'raydium' && pool.vault_a && pool.vault_b) {
+                accountsToWatch.push(pool.vault_a);
+                accountsToWatch.push(pool.vault_b);
+                raydiumVaultStates.set(pool.address, {
+                    vaultA: null,
+                    vaultB: null,
+                    poolName: pool.name,
+                    poolAddress: pool.address
+                });
+            }
+        }
+        // Create subscription request
+        const request = {
+            accounts: {
+                client: {
+                    account: accountsToWatch,
+                    owner: [],
+                    filters: [],
+                },
+            },
+            commitment: yellowstone_grpc_1.CommitmentLevel.PROCESSED,
+        };
+        console.log(`[gRPC] Subscribing to ${accountsToWatch.length} accounts...`);
+        // Subscribe and process updates
+        this.grpcStream = await this.grpcClient.subscribe();
+        // Handle incoming updates
+        this.grpcStream.on('data', (data) => {
             try {
-                if (pool.type === 'orca') {
-                    // Orca Whirlpool - subscribe to pool account
-                    const poolPubkey = new web3_js_1.PublicKey(pool.address);
-                    const subId = this.connection.onAccountChange(poolPubkey, (accountInfo) => {
-                        if (accountInfo && accountInfo.data) {
-                            this.processPriceUpdate(pool.address, pool.name, accountInfo.data);
-                        }
-                    }, 'processed');
-                    this.subscriptionIds.push(subId);
-                    console.log(`[gRPC] ✓ Subscribed to ${pool.name} (Orca Whirlpool)`);
-                }
-                else if (pool.type === 'raydium') {
-                    // Raydium AMM - subscribe to both vaults
-                    if (!pool.vault_a || !pool.vault_b) {
-                        console.error(`[gRPC] Missing vault addresses for ${pool.name}`);
+                if (data?.account?.account) {
+                    const update = data.account;
+                    // Convert pubkey from Uint8Array to base58 string
+                    const accountPubkey = new web3_js_1.PublicKey(update.account.pubkey);
+                    const accountKey = accountPubkey.toBase58();
+                    const accountData = Buffer.from(update.account.data);
+                    // Find which pool this account belongs to
+                    const orcaPool = POOLS.find(p => p.type === 'orca' && p.address === accountKey);
+                    if (orcaPool) {
+                        // Orca Whirlpool update
+                        this.processPriceUpdate(orcaPool.address, orcaPool.name, accountData);
                         return;
                     }
-                    const vaultAPubkey = new web3_js_1.PublicKey(pool.vault_a);
-                    const vaultBPubkey = new web3_js_1.PublicKey(pool.vault_b);
-                    let lastVaultABalance = null;
-                    let lastVaultBBalance = null;
-                    // Subscribe to SOL vault
-                    const subIdA = this.connection.onAccountChange(vaultAPubkey, (accountInfo) => {
-                        try {
-                            const amount = accountInfo.data.readBigUInt64LE(64);
-                            lastVaultABalance = amount;
-                            if (lastVaultBBalance !== null) {
-                                const solBalance = new decimal_js_1.default(lastVaultABalance.toString()).div(1e9);
-                                const usdcBalance = new decimal_js_1.default(lastVaultBBalance.toString()).div(1e6);
-                                if (!solBalance.isZero()) {
-                                    const price = usdcBalance.div(solBalance);
-                                    this.poolPrices.set(pool.address, price);
-                                    this.lastPriceUpdate.set(pool.address, Date.now());
-                                    this.updateCount++;
-                                    this.checkArbitrageOptimized();
+                    // Check if it's a Raydium vault
+                    for (const pool of POOLS) {
+                        if (pool.type === 'raydium' && pool.vault_a && pool.vault_b) {
+                            const state = raydiumVaultStates.get(pool.address);
+                            if (accountKey === pool.vault_a) {
+                                // SOL vault update
+                                const amount = accountData.readBigUInt64LE(64);
+                                state.vaultA = amount;
+                                if (state.vaultB !== null) {
+                                    const solBalance = new decimal_js_1.default(state.vaultA.toString()).div(1e9);
+                                    const usdcBalance = new decimal_js_1.default(state.vaultB.toString()).div(1e6);
+                                    if (!solBalance.isZero()) {
+                                        const price = usdcBalance.div(solBalance);
+                                        this.poolPrices.set(pool.address, price);
+                                        this.lastPriceUpdate.set(pool.address, Date.now());
+                                        this.updateCount++;
+                                        this.checkArbitrageOptimized();
+                                    }
                                 }
+                                return;
+                            }
+                            else if (accountKey === pool.vault_b) {
+                                // USDC vault update
+                                const amount = accountData.readBigUInt64LE(64);
+                                state.vaultB = amount;
+                                if (state.vaultA !== null) {
+                                    const solBalance = new decimal_js_1.default(state.vaultA.toString()).div(1e9);
+                                    const usdcBalance = new decimal_js_1.default(state.vaultB.toString()).div(1e6);
+                                    if (!solBalance.isZero()) {
+                                        const price = usdcBalance.div(solBalance);
+                                        this.poolPrices.set(pool.address, price);
+                                        this.lastPriceUpdate.set(pool.address, Date.now());
+                                        this.updateCount++;
+                                        this.checkArbitrageOptimized();
+                                    }
+                                }
+                                return;
                             }
                         }
-                        catch (error) {
-                            console.error(`[gRPC] Raydium vault A error: ${error.message}`);
-                        }
-                    }, 'processed');
-                    // Subscribe to USDC vault
-                    const subIdB = this.connection.onAccountChange(vaultBPubkey, (accountInfo) => {
-                        try {
-                            const amount = accountInfo.data.readBigUInt64LE(64);
-                            lastVaultBBalance = amount;
-                            if (lastVaultABalance !== null) {
-                                const solBalance = new decimal_js_1.default(lastVaultABalance.toString()).div(1e9);
-                                const usdcBalance = new decimal_js_1.default(lastVaultBBalance.toString()).div(1e6);
-                                if (!solBalance.isZero()) {
-                                    const price = usdcBalance.div(solBalance);
-                                    this.poolPrices.set(pool.address, price);
-                                    this.lastPriceUpdate.set(pool.address, Date.now());
-                                    this.updateCount++;
-                                    this.checkArbitrageOptimized();
-                                }
-                            }
-                        }
-                        catch (error) {
-                            console.error(`[gRPC] Raydium vault B error: ${error.message}`);
-                        }
-                    }, 'processed');
-                    this.subscriptionIds.push(subIdA, subIdB);
-                    console.log(`[gRPC] ✓ Subscribed to ${pool.name} (Raydium AMM - 2 vaults)`);
+                    }
                 }
             }
             catch (error) {
-                console.error(`[gRPC] Subscription error for ${pool.name}: ${error.message}`);
+                if (this.updateCount % 100 === 0) {
+                    console.error(`[gRPC] Update processing error: ${error.message}`);
+                }
             }
         });
-        // Wait for all subscriptions to complete
-        await Promise.all(subscriptionPromises);
-        console.log(`[gRPC] ✅ ${this.subscriptionIds.length} streaming connections ACTIVE (ULTRA-FAST MODE)`);
+        this.grpcStream.on('error', (error) => {
+            console.error(`[gRPC] Stream error: ${error.message}`);
+        });
+        this.grpcStream.on('end', () => {
+            console.log('[gRPC] Stream ended');
+        });
+        // Send the subscription request
+        await this.grpcStream.write(request);
+        console.log(`[gRPC] ✅ gRPC streaming ACTIVE - watching ${accountsToWatch.length} accounts`);
+        // Log pools being watched
+        for (const pool of POOLS) {
+            if (pool.type === 'orca') {
+                console.log(`[gRPC] ✓ Subscribed to ${pool.name} (Orca Whirlpool)`);
+            }
+            else if (pool.type === 'raydium') {
+                console.log(`[gRPC] ✓ Subscribed to ${pool.name} (Raydium AMM - 2 vaults)`);
+            }
+        }
     }
     /**
      * Initial price fetch (FAST)
@@ -353,11 +414,11 @@ class UltraFastGrpcScanner {
         console.log('⚡⚡⚡ ULTRA-FAST HFT SCANNER - RAYDIUM ↔ ORCA ⚡⚡⚡');
         console.log('='.repeat(70));
         console.log('Mode: HIGH-FREQUENCY TRADING (HFT)');
-        console.log('Technology: WebSocket + PROCESSED Commitment');
-        console.log('Latency: 200-400ms per update');
+        console.log('Technology: QuickNode Yellowstone gRPC + PROCESSED Commitment');
+        console.log('Latency: 50-200ms per update (gRPC streaming)');
         console.log('Pools: 1 Orca + 1 Raydium');
         console.log('Features:');
-        console.log('  ⚡ Real-time streaming updates');
+        console.log('  ⚡ Real-time gRPC streaming (no RPC polling)');
         console.log('  ⚡ Ultra-low latency');
         console.log('  ⚡ LOGS EVERY SCAN to CSV');
         console.log('  ⚡ Bidirectional arbitrage detection');
@@ -365,11 +426,10 @@ class UltraFastGrpcScanner {
         console.log('='.repeat(70));
         this.isRunning = true;
         this.startTime = Date.now();
-        // Step 1: Fetch initial prices
-        await this.fetchInitialPrices();
-        // Step 2: Subscribe to streaming updates
+        // Start gRPC streaming (no initial RPC fetch needed - gRPC provides everything)
         await this.subscribeToAccounts();
         console.log('\n[HFT] 🔥 SCANNER LIVE - LOGGING ALL SCANS!');
+        console.log('[HFT] Waiting for first gRPC price updates...');
         console.log('[HFT] Press Ctrl+C to stop\n');
     }
     /**
@@ -377,15 +437,16 @@ class UltraFastGrpcScanner {
      */
     stop() {
         this.isRunning = false;
-        // Unsubscribe from all streams
-        for (const subId of this.subscriptionIds) {
+        // Close gRPC stream
+        if (this.grpcStream) {
             try {
-                this.connection.removeAccountChangeListener(subId);
+                this.grpcStream.end();
             }
             catch (error) {
                 // Ignore cleanup errors
             }
         }
+        // gRPC client cleanup (stream handles connection cleanup)
         const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
         const avgUpdatesPerSec = (this.updateCount / parseFloat(elapsed)).toFixed(2);
         console.log(`\n[gRPC] Scanner stopped`);
@@ -402,12 +463,10 @@ exports.UltraFastGrpcScanner = UltraFastGrpcScanner;
 let scannerInstance = null;
 async function main() {
     try {
-        if (!process.env.HELIUS_API_KEY) {
-            throw new Error('HELIUS_API_KEY not set in .env');
-        }
         if (!process.env.RPC_URL) {
             throw new Error('RPC_URL not set in .env');
         }
+        console.log('[HFT] Starting scanner with QuickNode RPC...');
         scannerInstance = new UltraFastGrpcScanner();
         await scannerInstance.start();
         // Keep running

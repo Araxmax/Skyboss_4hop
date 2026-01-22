@@ -10,7 +10,19 @@
       "Bash(npm run build:*)",
       "Bash(node -p:*)",
       "Bash(pkill:*)",
-      "Bash(npm run executor:fast:*)"
+      "Bash(npm run executor:fast:*)",
+      "Bash(timeout 30 npm run:*)",
+      "Bash(node test-comprehensive-logger.js:*)",
+      "Bash(npm rebuild:*)",
+      "Bash(timeout 60 npm run bot:simple:*)",
+      "Bash(ts-node:*)",
+      "Bash(npm run bot:simple:*)",
+      "Bash(findstr:*)",
+      "Bash(npm run bot:multipool:live:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm run bot:multipool:*)",
+      "Bash(timeout 10 npm run bot:optimized)",
+      "Bash(npm run bot:optimized:*)"
     ]
   }
 }

@@ -14,13 +14,13 @@ const files = fs.readdirSync(logsDir)
   .reverse();
 
 if (files.length === 0) {
-  console.log('❌ No scanner logs found in logs/ directory');
+  console.log(' No scanner logs found in logs/ directory');
   console.log('Run your bot first with: npm run hft');
   process.exit(1);
 }
 
 const latestFile = path.join(logsDir, files[0]);
-console.log(`\n📊 Reading: ${latestFile}\n`);
+console.log(`\n Reading: ${latestFile}\n`);
 
 const content = fs.readFileSync(latestFile, 'utf8');
 const lines = content.split('\n').filter(line => line.trim().length > 0);

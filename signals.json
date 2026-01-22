@@ -1,0 +1,6097 @@
+{
+  "lastUpdate": 1768828149900,
+  "signals": [
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3029",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 242.34595993020164,
+      "profitPercent": 2423.459599302016,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "1.887738",
+          "priceImpact": "0.123"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.887738",
+          "amountOut": "252.345960",
+          "priceImpact": "0.209"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3575",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 12",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 242.24533436788207,
+      "profitPercent": 2422.4533436788206,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "1.574098",
+          "priceImpact": "0.102"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.574098",
+          "amountOut": "252.245334",
+          "priceImpact": "0.288"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_9739",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 210.25123145625147,
+      "profitPercent": 2102.512314562515,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "1.647208",
+          "priceImpact": "0.107"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.647208",
+          "amountOut": "220.251231",
+          "priceImpact": "0.182"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_10176",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 12",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 210.1745704835802,
+      "profitPercent": 2101.745704835802,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "1.373462",
+          "priceImpact": "0.089"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.373462",
+          "amountOut": "220.174570",
+          "priceImpact": "0.252"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3039",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 177.64647603957684,
+      "profitPercent": 1776.4647603957685,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "1.402986",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.402986",
+          "amountOut": "187.646476",
+          "priceImpact": "0.155"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3585",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 13",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 177.57274921875234,
+      "profitPercent": 1775.7274921875235,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "1.169654",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.169654",
+          "amountOut": "187.572749",
+          "priceImpact": "0.214"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_9749",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 153.74459532051037,
+      "profitPercent": 1537.4459532051037,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "1.224036",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.224036",
+          "amountOut": "163.744595",
+          "priceImpact": "0.135"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_10186",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 13",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 153.688451706453,
+      "profitPercent": 1536.88451706453,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "1.020440",
+          "priceImpact": "0.002"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.020440",
+          "amountOut": "163.688452",
+          "priceImpact": "0.187"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_9658",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 2",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 120.5551808718026,
+      "profitPercent": 1205.551808718026,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "0.975668",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.975668",
+          "amountOut": "130.555181",
+          "priceImpact": "0.108"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_2978",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 7",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 120.54591640383322,
+      "profitPercent": 1205.4591640383321,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "0.975599",
+          "priceImpact": "0.002"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.975599",
+          "amountOut": "130.545916",
+          "priceImpact": "0.108"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_10095",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 2",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 120.52349982773706,
+      "profitPercent": 1205.2349982773706,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "0.813380",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.813380",
+          "amountOut": "130.523500",
+          "priceImpact": "0.149"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3535",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 7",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 120.51768658811088,
+      "profitPercent": 1205.1768658811088,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "0.813344",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.813344",
+          "amountOut": "130.517687",
+          "priceImpact": "0.149"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_16342",
+      "pathType": "4hop",
+      "description": "Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 6",
+        "Pool 13",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 79.73529351613954,
+      "profitPercent": 797.3529351613953,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "71.587448",
+          "priceImpact": "0.082"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "71.587448",
+          "amountOut": "2.369639",
+          "priceImpact": "0.006"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "2.369639",
+          "amountOut": "89.735294",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_15905",
+      "pathType": "4hop",
+      "description": "Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 2",
+        "Pool 13",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 79.7213133326805,
+      "profitPercent": 797.213133326805,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "16.882411",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "16.882411",
+          "amountOut": "0.558854",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.558854",
+          "amountOut": "89.721313",
+          "priceImpact": "0.102"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_17225",
+      "pathType": "4hop",
+      "description": "Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 13",
+        "Pool 2",
+        "Pool 12",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 79.71527191696232,
+      "profitPercent": 797.1527191696232,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.331029",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.331029",
+          "amountOut": "12.535773",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "12.535773",
+          "amountOut": "0.558816",
+          "priceImpact": "0.036"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.558816",
+          "amountOut": "89.715272",
+          "priceImpact": "0.102"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_17662",
+      "pathType": "4hop",
+      "description": "Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 13",
+        "Pool 6",
+        "Pool 12",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 79.64663175348672,
+      "profitPercent": 796.4663175348672,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.331029",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.331029",
+          "amountOut": "53.167295",
+          "priceImpact": "0.061"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "53.167295",
+          "amountOut": "2.367297",
+          "priceImpact": "0.154"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "2.367297",
+          "amountOut": "89.646632",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3135",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 7",
+        "Pool 12",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 71.97924277300858,
+      "profitPercent": 719.7924277300857,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "11.453461",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "11.453461",
+          "amountOut": "0.510585",
+          "priceImpact": "0.033"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.510585",
+          "amountOut": "81.979243",
+          "priceImpact": "0.094"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3025",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 12",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 71.94080244525423,
+      "profitPercent": 719.4080244525423,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "1.887738",
+          "priceImpact": "0.123"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.887738",
+          "amountOut": "81.940802",
+          "priceImpact": "0.003"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "1hop_138",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.05% #2, Sell SOL on Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 61.58744847323928,
+      "profitPercent": 615.8744847323928,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "71.587448",
+          "priceImpact": "0.082"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3139",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 7",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 58.35704773034311,
+      "profitPercent": 583.5704773034311,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "11.453461",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "11.453461",
+          "amountOut": "0.510585",
+          "priceImpact": "0.033"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.510585",
+          "amountOut": "68.357048",
+          "priceImpact": "0.056"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3576",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 12",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 58.32703782934376,
+      "profitPercent": 583.2703782934376,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "1.574098",
+          "priceImpact": "0.102"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.574098",
+          "amountOut": "68.327038",
+          "priceImpact": "0.003"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_9295",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 2",
+        "Pool 12",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 52.41114456191409,
+      "profitPercent": 524.1114456191409,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "8.716933",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.716933",
+          "amountOut": "0.388624",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.388624",
+          "amountOut": "62.411145",
+          "priceImpact": "0.071"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_9732",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 12",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 52.37791910326347,
+      "profitPercent": 523.7791910326347,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "1.647208",
+          "priceImpact": "0.107"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.647208",
+          "amountOut": "62.377919",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3035",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.10% <-> Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 13",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 50.89974100373405,
+      "profitPercent": 508.9974100373405,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "1.402986",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.402986",
+          "amountOut": "60.899741",
+          "priceImpact": "0.002"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3145",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 7",
+        "Pool 13",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 50.88952239900093,
+      "profitPercent": 508.89522399000936,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "11.453461",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "11.453461",
+          "amountOut": "0.379142",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.379142",
+          "amountOut": "60.889522",
+          "priceImpact": "0.069"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "1hop_143",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.05% #2, Sell SOL on Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 49.68921780334312,
+      "profitPercent": 496.8921780334312,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "59.689218",
+          "priceImpact": "0.049"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3805",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 13",
+        "Pool 12",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 46.95871039581794,
+      "profitPercent": 469.5871039581794,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "7.954724",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "7.954724",
+          "amountOut": "0.354650",
+          "priceImpact": "0.023"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.354650",
+          "amountOut": "56.958710",
+          "priceImpact": "0.065"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_16915",
+      "pathType": "4hop",
+      "description": "Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 13",
+        "Pool 2",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 46.95508007479553,
+      "profitPercent": 469.5508007479553,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "13.440227",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "13.440227",
+          "amountOut": "0.354628",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.354628",
+          "amountOut": "56.955080",
+          "priceImpact": "0.065"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_16260",
+      "pathType": "4hop",
+      "description": "Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 6",
+        "Pool 2",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 46.94326074654297,
+      "profitPercent": 469.43260746542967,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "71.587448",
+          "priceImpact": "0.082"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "71.587448",
+          "amountOut": "1.888862",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.888862",
+          "amountOut": "56.943261",
+          "priceImpact": "0.004"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3030",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 12",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 46.90938166648845,
+      "profitPercent": 469.0938166648845,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "1.887738",
+          "priceImpact": "0.123"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.887738",
+          "amountOut": "56.909382",
+          "priceImpact": "0.004"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "1hop_16",
+      "pathType": "1hop",
+      "description": "Buy SOL on Orca Whirlpool SOL/USDC 0.04%, Sell SOL on Raydium CLMM SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 5"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 46.73853349326149,
+      "profitPercent": 467.3853349326149,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "56.738533",
+          "priceImpact": "0.008"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "1hop_150",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.10%, Sell SOL on Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 13",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 43.167295230959446,
+      "profitPercent": 431.6729523095945,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.331029",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.331029",
+          "amountOut": "53.167295",
+          "priceImpact": "0.061"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_9299",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 2",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 42.03590908441432,
+      "profitPercent": 420.3590908441432,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "8.716933",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.716933",
+          "amountOut": "0.388624",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.388624",
+          "amountOut": "52.035909",
+          "priceImpact": "0.043"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_10172",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 12",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 42.01153094215749,
+      "profitPercent": 420.1153094215749,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "1.373462",
+          "priceImpact": "0.089"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.373462",
+          "amountOut": "52.011531",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3586",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.10% <-> Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 13",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 40.771645279804225,
+      "profitPercent": 407.71645279804227,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "1.169654",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.169654",
+          "amountOut": "50.771645",
+          "priceImpact": "0.002"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3149",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 7",
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 40.76689255729476,
+      "profitPercent": 407.66892557294756,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "11.453461",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "11.453461",
+          "amountOut": "0.379142",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.379142",
+          "amountOut": "50.766893",
+          "priceImpact": "0.042"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_10406",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 13",
+        "Pool 12",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 39.695990813800165,
+      "profitPercent": 396.95990813800165,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "6.939651",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "6.939651",
+          "amountOut": "0.309404",
+          "priceImpact": "0.020"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.309404",
+          "amountOut": "49.695991",
+          "priceImpact": "0.057"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_9740",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 12",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 39.65843559459812,
+      "profitPercent": 396.58435594598114,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "1.647208",
+          "priceImpact": "0.107"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.647208",
+          "amountOut": "49.658436",
+          "priceImpact": "0.004"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "1hop_77",
+      "pathType": "1hop",
+      "description": "Buy SOL on Raydium CLMM SOL/USDC 0.04%, Sell SOL on Raydium CLMM SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 5"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 39.49882897304765,
+      "profitPercent": 394.98828973047654,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "49.498829",
+          "priceImpact": "0.007"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3810",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 13",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 37.48871835407962,
+      "profitPercent": 374.88718354079623,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "7.954724",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "7.954724",
+          "amountOut": "0.354650",
+          "priceImpact": "0.023"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.354650",
+          "amountOut": "47.488718",
+          "priceImpact": "0.039"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149897,
+      "pathId": "4hop_3580",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 12",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 37.454473975119626,
+      "profitPercent": 374.54473975119623,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "1.574098",
+          "priceImpact": "0.102"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.574098",
+          "amountOut": "47.454474",
+          "priceImpact": "0.004"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9742",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 13",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 36.35295536162081,
+      "profitPercent": 363.52955361620803,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "1.224036",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.224036",
+          "amountOut": "46.352955",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9305",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 2",
+        "Pool 13",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 36.349224803034595,
+      "profitPercent": 363.49224803034593,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "8.716933",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.716933",
+          "amountOut": "0.288556",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.288556",
+          "amountOut": "46.349225",
+          "priceImpact": "0.053"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_155",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.10%, Sell SOL on Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 34.32690706104831,
+      "profitPercent": 343.26907061048314,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.331029",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.331029",
+          "amountOut": "44.326907",
+          "priceImpact": "0.037"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_17",
+      "pathType": "1hop",
+      "description": "Buy SOL on Orca Whirlpool SOL/USDC 0.04%, Sell SOL on Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 32.38363589317855,
+      "profitPercent": 323.83635893178547,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10410",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 13",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 31.432143782105793,
+      "profitPercent": 314.32143782105794,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "6.939651",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "6.939651",
+          "amountOut": "0.309404",
+          "priceImpact": "0.020"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.309404",
+          "amountOut": "41.432144",
+          "priceImpact": "0.034"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10180",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 12",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 31.406074855459455,
+      "profitPercent": 314.0607485545945,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "1.373462",
+          "priceImpact": "0.089"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.373462",
+          "amountOut": "41.406075",
+          "priceImpact": "0.003"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10182",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 13",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 28.64301435580185,
+      "profitPercent": 286.43014355801853,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "1.020440",
+          "priceImpact": "0.002"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.020440",
+          "amountOut": "38.643014",
+          "priceImpact": "0.000"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9309",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 2",
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 28.641320568972173,
+      "profitPercent": 286.41320568972174,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "8.716933",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.716933",
+          "amountOut": "0.288556",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.288556",
+          "amountOut": "38.641321",
+          "priceImpact": "0.032"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_78",
+      "pathType": "1hop",
+      "description": "Buy SOL on Raydium CLMM SOL/USDC 0.04%, Sell SOL on Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 26.977464904022895,
+      "profitPercent": 269.77464904022895,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_22",
+      "pathType": "1hop",
+      "description": "Buy SOL on Orca Whirlpool SOL/USDC 0.04%, Sell SOL on Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 25.33457849082216,
+      "profitPercent": 253.34578490822162,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3695",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 12",
+        "Pool 13",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 21.429403135584213,
+      "profitPercent": 214.29403135584212,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "5.909933",
+          "priceImpact": "0.017"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "5.909933",
+          "amountOut": "0.195637",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.195637",
+          "amountOut": "31.429403",
+          "priceImpact": "0.036"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_18235",
+      "pathType": "4hop",
+      "description": "Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 13",
+        "Pool 12",
+        "Pool 2",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 21.427945422848385,
+      "profitPercent": 214.27945422848384,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.331029",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.331029",
+          "amountOut": "7.414185",
+          "priceImpact": "0.021"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "7.414185",
+          "amountOut": "0.195627",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.195627",
+          "amountOut": "31.427945",
+          "priceImpact": "0.036"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3040",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 13",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 21.40141486169349,
+      "profitPercent": 214.0141486169349,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "1.402986",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.402986",
+          "amountOut": "31.401415",
+          "priceImpact": "0.091"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_17580",
+      "pathType": "4hop",
+      "description": "Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 13",
+        "Pool 6",
+        "Pool 2",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 21.398192244836764,
+      "profitPercent": 213.98192244836764,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.331029",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.331029",
+          "amountOut": "53.167295",
+          "priceImpact": "0.061"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "53.167295",
+          "amountOut": "1.402842",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.402842",
+          "amountOut": "31.398192",
+          "priceImpact": "0.091"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_82",
+      "pathType": "1hop",
+      "description": "Buy SOL on Raydium CLMM SOL/USDC 0.04%, Sell SOL on Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 20.826784902194454,
+      "profitPercent": 208.26784902194453,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10315",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 13",
+        "Pool 2",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 19.417123434594416,
+      "profitPercent": 194.17123434594419,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "6.939651",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "6.939651",
+          "amountOut": "0.183107",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.183107",
+          "amountOut": "29.417123",
+          "priceImpact": "0.034"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3755",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 13",
+        "Pool 7",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 19.41711299724282,
+      "profitPercent": 194.1711299724282,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "7.954724",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "7.954724",
+          "amountOut": "0.183107",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.183107",
+          "amountOut": "29.417113",
+          "priceImpact": "0.034"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9660",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 2",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 19.413970087011926,
+      "profitPercent": 194.13970087011927,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "0.975668",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.975668",
+          "amountOut": "29.413970",
+          "priceImpact": "0.002"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_2980",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 7",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 19.41188060665427,
+      "profitPercent": 194.1188060665427,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "0.975599",
+          "priceImpact": "0.002"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.975599",
+          "amountOut": "29.411881",
+          "priceImpact": "0.002"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10296",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 12",
+        "Pool 13",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 17.420657355330746,
+      "profitPercent": 174.20657355330744,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "5.155896",
+          "priceImpact": "0.015"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "5.155896",
+          "amountOut": "0.170676",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.170676",
+          "amountOut": "27.420657",
+          "priceImpact": "0.031"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9750",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 13",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 17.399351012877034,
+      "profitPercent": 173.99351012877034,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "1.224036",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.224036",
+          "amountOut": "27.399351",
+          "priceImpact": "0.079"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3700",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 12",
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 16.200908330848613,
+      "profitPercent": 162.00908330848614,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "5.909933",
+          "priceImpact": "0.017"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "5.909933",
+          "amountOut": "0.195637",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.195637",
+          "amountOut": "26.200908",
+          "priceImpact": "0.022"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3590",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 13",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 16.182969658505765,
+      "profitPercent": 161.82969658505766,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "1.169654",
+          "priceImpact": "0.003"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.169654",
+          "amountOut": "26.182970",
+          "priceImpact": "0.076"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10319",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 13",
+        "Pool 2",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 14.523162118048965,
+      "profitPercent": 145.23162118048964,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "6.939651",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "6.939651",
+          "amountOut": "0.183107",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.183107",
+          "amountOut": "24.523162",
+          "priceImpact": "0.020"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3759",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 13",
+        "Pool 7",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 14.523153415944615,
+      "profitPercent": 145.23153415944614,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "7.954724",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "7.954724",
+          "amountOut": "0.183107",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.183107",
+          "amountOut": "24.523153",
+          "priceImpact": "0.020"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10100",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 2",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 14.521481841216525,
+      "profitPercent": 145.21481841216524,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "0.813380",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.813380",
+          "amountOut": "24.521482",
+          "priceImpact": "0.002"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3540",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 7",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 14.520388100426677,
+      "profitPercent": 145.20388100426678,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "0.813344",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.813344",
+          "amountOut": "24.520388",
+          "priceImpact": "0.002"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10300",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 12",
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 12.8586307175909,
+      "profitPercent": 128.58630717590898,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "5.155896",
+          "priceImpact": "0.015"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "5.155896",
+          "amountOut": "0.170676",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.170676",
+          "amountOut": "22.858631",
+          "priceImpact": "0.019"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10190",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 13",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 12.844975583879366,
+      "profitPercent": 128.44975583879366,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "1.020440",
+          "priceImpact": "0.002"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "1.020440",
+          "amountOut": "22.844976",
+          "priceImpact": "0.066"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10205",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 12",
+        "Pool 2",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 11.857689248346839,
+      "profitPercent": 118.57689248346838,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "5.155896",
+          "priceImpact": "0.015"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "5.155896",
+          "amountOut": "0.136041",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.136041",
+          "amountOut": "21.857689",
+          "priceImpact": "0.025"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3645",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 12",
+        "Pool 7",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 11.857234975898761,
+      "profitPercent": 118.57234975898761,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "5.909933",
+          "priceImpact": "0.017"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "5.909933",
+          "amountOut": "0.136038",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.136038",
+          "amountOut": "21.857235",
+          "priceImpact": "0.025"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9659",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 2",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 11.84329347189143,
+      "profitPercent": 118.43293471891431,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "0.975668",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.975668",
+          "amountOut": "21.843293",
+          "priceImpact": "0.063"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_2979",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 7",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 11.841742734270909,
+      "profitPercent": 118.41742734270909,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "0.975599",
+          "priceImpact": "0.002"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.975599",
+          "amountOut": "21.841743",
+          "priceImpact": "0.063"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_139",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.05% #2, Sell SOL on Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 9.351682341237632,
+      "profitPercent": 93.51682341237633,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "19.351682",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10209",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 12",
+        "Pool 2",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 8.220726270986159,
+      "profitPercent": 82.2072627098616,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "5.155896",
+          "priceImpact": "0.015"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "5.155896",
+          "amountOut": "0.136041",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.136041",
+          "amountOut": "18.220726",
+          "priceImpact": "0.015"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3649",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 12",
+        "Pool 7",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 8.220347548832816,
+      "profitPercent": 82.20347548832815,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "5.909933",
+          "priceImpact": "0.017"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "5.909933",
+          "amountOut": "0.136038",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.136038",
+          "amountOut": "18.220348",
+          "priceImpact": "0.015"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10099",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 11",
+        "Pool 2",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 8.211896060023497,
+      "profitPercent": 82.11896060023497,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "30.826785",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "30.826785",
+          "amountOut": "0.813380",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.813380",
+          "amountOut": "18.211896",
+          "priceImpact": "0.053"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3539",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 11",
+        "Pool 7",
+        "Pool 12"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2"
+      ],
+      "estimatedProfit": 8.211084160315725,
+      "profitPercent": 82.11084160315725,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "35.334578",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "35.334578",
+          "amountOut": "0.813344",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.813344",
+          "amountOut": "18.211084",
+          "priceImpact": "0.053"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_134",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.05% #2, Sell SOL on Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 6.882410601229227,
+      "profitPercent": 68.82410601229228,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "16.882411",
+          "priceImpact": "0.000"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_8419",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 7",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 6.123179466210027,
+      "profitPercent": 61.23179466210028,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "2.699647",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "2.699647",
+          "amountOut": "0.120378",
+          "priceImpact": "0.008"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.120378",
+          "amountOut": "16.123179",
+          "priceImpact": "0.013"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_8856",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 11",
+        "Pool 12",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 6.121509356275017,
+      "profitPercent": 61.21509356275018,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "8.330393",
+          "priceImpact": "0.007"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.330393",
+          "amountOut": "0.371395",
+          "priceImpact": "0.024"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.371395",
+          "amountOut": "16.121509",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_125",
+      "pathType": "1hop",
+      "description": "Buy SOL on Orca Whirlpool SOL/USDC 0.05%, Sell SOL on Raydium CLMM SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 11",
+        "Pool 5"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Raydium CLMM SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 6.0364228643158775,
+      "profitPercent": 60.364228643158775,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.074571",
+          "priceImpact": "0.008"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.074571",
+          "amountOut": "16.036423",
+          "priceImpact": "0.002"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3806",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 13",
+        "Pool 12",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 5.394663350125864,
+      "profitPercent": 53.94663350125864,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "7.954724",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "7.954724",
+          "amountOut": "0.354650",
+          "priceImpact": "0.023"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.354650",
+          "amountOut": "15.394663",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3140",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 7",
+        "Pool 12",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 5.3930411537067044,
+      "profitPercent": 53.930411537067044,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "11.453461",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "11.453461",
+          "amountOut": "0.510585",
+          "priceImpact": "0.033"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.510585",
+          "amountOut": "15.393041",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_151",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.10%, Sell SOL on Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 13",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 4.369313167052821,
+      "profitPercent": 43.69313167052821,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.331029",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.331029",
+          "amountOut": "14.369313",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_7979",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 2",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 4.06617616220073,
+      "profitPercent": 40.66176162200729,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "2.355161",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "2.355161",
+          "amountOut": "0.105019",
+          "priceImpact": "0.007"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.105019",
+          "amountOut": "14.066176",
+          "priceImpact": "0.012"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_8852",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 11",
+        "Pool 12",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 4.064394214693122,
+      "profitPercent": 40.643942146931224,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "8.330393",
+          "priceImpact": "0.007"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.330393",
+          "amountOut": "0.371395",
+          "priceImpact": "0.024"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.371395",
+          "amountOut": "14.064394",
+          "priceImpact": "0.000"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3125",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 7",
+        "Pool 11",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 3.723813504181357,
+      "profitPercent": 37.23813504181357,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "11.453461",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "11.453461",
+          "amountOut": "0.085408",
+          "priceImpact": "0.009"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.085408",
+          "amountOut": "13.723814",
+          "priceImpact": "0.016"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_3015",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.05% <-> Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 6",
+        "Pool 11",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 3.7158184837488513,
+      "profitPercent": 37.15818483748851,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "42.383636",
+          "priceImpact": "0.048"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "42.383636",
+          "amountOut": "0.315974",
+          "priceImpact": "0.035"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.315974",
+          "amountOut": "13.715818",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_144",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.05% #2, Sell SOL on Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 12",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 3.440226662012225,
+      "profitPercent": 34.40226662012225,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.445810",
+          "priceImpact": "0.029"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.445810",
+          "amountOut": "13.440227",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_65",
+      "pathType": "1hop",
+      "description": "Buy SOL on Orca Whirlpool SOL/USDC 0.02%, Sell SOL on Raydium CLMM SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 5"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Raydium CLMM SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 3.374414787837103,
+      "profitPercent": 33.74414787837103,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "13.374415",
+          "priceImpact": "0.002"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_146",
+      "pathType": "1hop",
+      "description": "Buy SOL on Meteora DLMM SOL/USDC 0.10%, Sell SOL on Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 13",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 2.5357731270613986,
+      "profitPercent": 25.357731270613986,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.331029",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.331029",
+          "amountOut": "12.535773",
+          "priceImpact": "0.000"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_126",
+      "pathType": "1hop",
+      "description": "Buy SOL on Orca Whirlpool SOL/USDC 0.05%, Sell SOL on Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 11",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 1.9826229947286718,
+      "profitPercent": 19.826229947286716,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.074571",
+          "priceImpact": "0.008"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.074571",
+          "amountOut": "11.982623",
+          "priceImpact": "0.014"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_8866",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.10% <-> Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 11",
+        "Pool 13",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 1.9702288989438477,
+      "profitPercent": 19.70228898943848,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "8.330393",
+          "priceImpact": "0.007"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.330393",
+          "amountOut": "0.275761",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.275761",
+          "amountOut": "11.970229",
+          "priceImpact": "0.000"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_8429",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 7",
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 1.969964697026478,
+      "profitPercent": 19.69964697026478,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "2.699647",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "2.699647",
+          "amountOut": "0.089367",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.089367",
+          "amountOut": "11.969965",
+          "priceImpact": "0.010"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_10402",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 13",
+        "Pool 12",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 1.716847026653797,
+      "profitPercent": 17.16847026653797,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "6.939651",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "6.939651",
+          "amountOut": "0.309404",
+          "priceImpact": "0.020"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.309404",
+          "amountOut": "11.716847",
+          "priceImpact": "0.000"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9300",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 2",
+        "Pool 12",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 1.7162056754232944,
+      "profitPercent": 17.162056754232943,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "8.716933",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.716933",
+          "amountOut": "0.388624",
+          "priceImpact": "0.025"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.388624",
+          "amountOut": "11.716206",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "1hop_18",
+      "pathType": "1hop",
+      "description": "Buy SOL on Orca Whirlpool SOL/USDC 0.04%, Sell SOL on Raydium CLMM SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 2",
+        "Pool 7"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Raydium CLMM SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 1.4534609378582617,
+      "profitPercent": 14.534609378582616,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.263856",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.263856",
+          "amountOut": "11.453461",
+          "priceImpact": "0.000"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9090",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Meteora DLMM SOL/USDC 0.10% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 13",
+        "Pool 12",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 1.1987018472140007,
+      "profitPercent": 11.987018472140008,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "1.874977",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "1.874977",
+          "amountOut": "0.083608",
+          "priceImpact": "0.005"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.083608",
+          "amountOut": "11.198702",
+          "priceImpact": "0.009"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_8860",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.05% #2 <-> Meteora DLMM SOL/USDC 0.10%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 11",
+        "Pool 12",
+        "Pool 13"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.05% #2",
+        "Meteora DLMM SOL/USDC 0.10%"
+      ],
+      "estimatedProfit": 1.1967964604339292,
+      "profitPercent": 11.96796460433929,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "8.330393",
+          "priceImpact": "0.007"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.05% #2",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.330393",
+          "amountOut": "0.371395",
+          "priceImpact": "0.024"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.371395",
+          "amountOut": "11.196796",
+          "priceImpact": "0.001"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9285",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.05% <-> Orca Whirlpool SOL/USDC 0.02%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 2",
+        "Pool 11",
+        "Pool 6"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Orca Whirlpool SOL/USDC 0.02%"
+      ],
+      "estimatedProfit": 0.44546575276663636,
+      "profitPercent": 4.454657527666363,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "8.716933",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.716933",
+          "amountOut": "0.065004",
+          "priceImpact": "0.007"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.065004",
+          "amountOut": "10.445466",
+          "priceImpact": "0.012"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_8862",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.05% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 11",
+        "Pool 13",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 0.4428074682168427,
+      "profitPercent": 4.428074682168427,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "8.330393",
+          "priceImpact": "0.007"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "8.330393",
+          "amountOut": "0.275761",
+          "priceImpact": "0.001"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.275761",
+          "amountOut": "10.442807",
+          "priceImpact": "0.000"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_7989",
+      "pathType": "4hop",
+      "description": "Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.04% <-> Meteora DLMM SOL/USDC 0.10% <-> Orca Whirlpool SOL/USDC 0.05%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 6",
+        "Pool 2",
+        "Pool 13",
+        "Pool 11"
+      ],
+      "poolNames": [
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.04%",
+        "Meteora DLMM SOL/USDC 0.10%",
+        "Orca Whirlpool SOL/USDC 0.05%"
+      ],
+      "estimatedProfit": 0.44268376950044086,
+      "profitPercent": 4.426837695004409,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.062192",
+          "priceImpact": "0.011"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.062192",
+          "amountOut": "2.355161",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Meteora DLMM SOL/USDC 0.10%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "2.355161",
+          "amountOut": "0.077963",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.077963",
+          "amountOut": "10.442684",
+          "priceImpact": "0.009"
+        }
+      ]
+    },
+    {
+      "timestamp": 1768828149898,
+      "pathId": "4hop_9722",
+      "pathType": "4hop",
+      "description": "Raydium CLMM SOL/USDC 0.04% <-> Orca Whirlpool SOL/USDC 0.02% <-> Orca Whirlpool SOL/USDC 0.05% <-> Orca Whirlpool SOL/USDC 0.04%",
+      "path": [
+        "USDC",
+        "SOL",
+        "USDC",
+        "SOL",
+        "USDC"
+      ],
+      "poolIds": [
+        "Pool 7",
+        "Pool 6",
+        "Pool 11",
+        "Pool 2"
+      ],
+      "poolNames": [
+        "Raydium CLMM SOL/USDC 0.04%",
+        "Orca Whirlpool SOL/USDC 0.02%",
+        "Orca Whirlpool SOL/USDC 0.05%",
+        "Orca Whirlpool SOL/USDC 0.04%"
+      ],
+      "estimatedProfit": 0.4398708433218273,
+      "profitPercent": 4.398708433218273,
+      "tradeAmount": 10,
+      "swapDetails": [
+        {
+          "pool": "Raydium CLMM SOL/USDC 0.04%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "10.000000",
+          "amountOut": "0.230186",
+          "priceImpact": "0.000"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.02%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.230186",
+          "amountOut": "36.977465",
+          "priceImpact": "0.042"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.05%",
+          "tokenIn": "USDC",
+          "tokenOut": "SOL",
+          "amountIn": "36.977465",
+          "amountOut": "0.275683",
+          "priceImpact": "0.031"
+        },
+        {
+          "pool": "Orca Whirlpool SOL/USDC 0.04%",
+          "tokenIn": "SOL",
+          "tokenOut": "USDC",
+          "amountIn": "0.275683",
+          "amountOut": "10.439871",
+          "priceImpact": "0.000"
+        }
+      ]
+    }
+  ]
+}

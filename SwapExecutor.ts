@@ -5,6 +5,7 @@ import {
   Transaction,
   VersionedTransaction,
   TransactionMessage,
+  TransactionInstruction,
   ComputeBudgetProgram,
   SystemProgram,
 } from "@solana/web3.js";
@@ -25,10 +26,11 @@ import {
 } from "@orca-so/whirlpools-sdk";
 import type { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
 import { Percentage } from "@orca-so/common-sdk";
-import { SOL_MINT, USDC_MINT } from "./constants";
+import { SOL_MINT, USDC_MINT, PREDEFINED_POOLS } from "./constants";
 import axios from "axios";
 import pRetry from "p-retry";
 import { RpcConnectionManager } from "./RpcConnectionManager";
+import { RaydiumSwapExecutor } from "./RaydiumSwapExecutor";
 
 dotenv.config();
 
@@ -54,6 +56,7 @@ interface SwapResult {
   error?: string;
   amountIn?: string;
   amountOut?: string;
+  outputAmount?: any;  // Alias for amountOut for backward compatibility
   actualSlippage?: number;
   priceImpact?: number;
   executionTime?: number;
@@ -121,6 +124,7 @@ export class SwapExecutor {
   private maxPriorityFee: number;
   private whirlpoolContext: WhirlpoolContext | null = null;
   private whirlpoolClient: ReturnType<typeof buildWhirlpoolClient> | null = null;
+  private raydiumExecutor: RaydiumSwapExecutor | null = null;
   private heliusApiKey: string;
   private usePrivateTx: boolean;
   private maxRetries: number;
@@ -152,6 +156,16 @@ export class SwapExecutor {
     this.retryDelay = config.retryDelay ?? 1000;
     this.transactionDeadline = config.transactionDeadline ?? 30; // 30 seconds
     this.rpcManager = config.rpcManager || null;
+
+    // Initialize Raydium executor if RPC manager is available
+    if (this.rpcManager) {
+      this.raydiumExecutor = new RaydiumSwapExecutor(
+        this.rpcManager,
+        wallet,
+        this.maxRetries,
+        maxPriorityFee
+      );
+    }
   }
 
   /**
@@ -629,6 +643,15 @@ export class SwapExecutor {
   }
 
   /**
+   * Detect if a pool is Raydium or Orca based on pool address
+   */
+  private isRaydiumPool(poolAddress: string): boolean {
+    // Check against known Raydium pool from constants
+    const RAYDIUM_POOL_ADDRESS = "58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2";
+    return poolAddress === RAYDIUM_POOL_ADDRESS;
+  }
+
+  /**
    * Execute a SINGLE swap transaction (simpler alternative to atomic arbitrage)
    * Used for sequential swap mode where each swap is a separate transaction
    */
@@ -646,6 +669,41 @@ export class SwapExecutor {
       console.log(`Input: ${amountIn.toString()} ${inputMint === SOL_MINT ? "SOL" : "USDC"}`);
       console.log(`Output: ${outputMint === SOL_MINT ? "SOL" : "USDC"}`);
       console.log(`Slippage Tolerance: ${slippageTolerance * 100}%`);
+
+      // CRITICAL: Check if this is a Raydium pool and route accordingly
+      if (this.isRaydiumPool(poolAddress)) {
+        console.log("✓ Raydium pool detected - routing to Raydium executor");
+
+        if (!this.raydiumExecutor) {
+          return {
+            success: false,
+            error: "Raydium executor not initialized - RPC manager required",
+          };
+        }
+
+        // Find pool config to get vaults
+        const poolConfig = PREDEFINED_POOLS.find(p => p.address === poolAddress);
+        if (!poolConfig || !poolConfig.vault_a || !poolConfig.vault_b) {
+          return {
+            success: false,
+            error: "Raydium pool configuration not found or invalid",
+          };
+        }
+
+        // Determine token direction
+        const tokenIn: "SOL" | "USDC" = inputMint === SOL_MINT ? "SOL" : "USDC";
+
+        // Execute Raydium swap
+        return await this.raydiumExecutor.executeRaydiumSwap(
+          poolAddress,
+          poolConfig.vault_a,
+          poolConfig.vault_b,
+          amountIn,
+          tokenIn,
+          slippageTolerance,
+          false // not a dry run
+        );
+      }
 
       // Validate slippage (skip for test swaps)
       if (!skipValidation && slippageTolerance > this.maxSlippage.toNumber()) {
@@ -793,13 +851,47 @@ export class SwapExecutor {
       }
 
       // Send transaction
+      // Skip preflight for test swaps to avoid RPC compatibility issues
       const signature = await this.connection.sendRawTransaction(tx.serialize(), {
-        skipPreflight: false,
+        skipPreflight: skipValidation, // Skip simulation for test swaps
         preflightCommitment: "confirmed",
       });
 
-      // Wait for confirmation
-      const confirmation = await this.connection.confirmTransaction(signature, "confirmed");
+      // Wait for confirmation with timeout (60 seconds)
+      const confirmationTimeout = 60000; // 60 seconds
+      const latestBlockhash = await this.connection.getLatestBlockhash();
+
+      const confirmationPromise = this.connection.confirmTransaction(
+        {
+          signature,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        },
+        "confirmed"
+      );
+
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Confirmation timeout")), confirmationTimeout)
+      );
+
+      let confirmation: any = null;
+      try {
+        confirmation = await Promise.race([confirmationPromise, timeoutPromise]);
+      } catch (timeoutError) {
+        // Check if transaction actually succeeded despite timeout
+        console.log(`[ORCA] Confirmation timeout - checking transaction status...`);
+        const status = await this.connection.getSignatureStatus(signature);
+        if (status?.value?.confirmationStatus === 'confirmed' || status?.value?.confirmationStatus === 'finalized') {
+          console.log(`[ORCA] Transaction was actually confirmed: ${signature}`);
+          confirmation = { value: { err: null } };
+        } else {
+          throw new Error(`Transaction confirmation timeout after ${confirmationTimeout}ms. Status: ${status?.value?.confirmationStatus || 'unknown'}`);
+        }
+      }
+
+      if (confirmation?.value?.err) {
+        throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
+      }
 
       const executionTime = Date.now() - startTime;
 
@@ -937,7 +1029,33 @@ export class SwapExecutor {
     console.log("=".repeat(70));
 
     try {
-      // Validate deadline hasn't been set too long ago
+      // Check if any pool is Raydium (for cross-DEX atomic arbitrage)
+      const isPool1Raydium = this.isRaydiumPool(pool1Address);
+      const isPool2Raydium = this.isRaydiumPool(pool2Address);
+      const hasRaydiumPool = isPool1Raydium || isPool2Raydium;
+
+      if (hasRaydiumPool) {
+        console.log("⚠️  Cross-DEX arbitrage detected (Orca + Raydium)");
+        console.log("⚠️  Cross-DEX atomic transactions exceed Solana's transaction size limit");
+        console.log("⚠️  Automatically falling back to SINGLE mode for this arbitrage");
+        console.log("⚠️  (Sequential execution: Swap 1 → Confirm → Swap 2)\n");
+
+        // Fall back to SINGLE mode for cross-DEX arbitrage
+        // Atomic transactions with Orca + Raydium are too large (>1232 bytes)
+        return await this.executeSequentialSwaps(
+          pool1Address,
+          pool2Address,
+          tokenAMint,
+          tokenBMint,
+          amountToTrade,
+          direction,
+          slippage,
+          skipValidation
+        );
+      }
+
+      // Continue with Orca-only atomic arbitrage
+      console.log("🌊 Orca-only atomic arbitrage");
       const currentTime = Date.now();
 
       let firstPool: string;
@@ -1140,6 +1258,424 @@ export class SwapExecutor {
         success: false,
         error: error.message,
         totalExecutionTime: executionTime,
+      };
+    }
+  }
+
+  /**
+   * Execute ATOMIC cross-DEX arbitrage: Orca + Raydium in single transaction
+   * Combines instructions from both DEXes into one atomic transaction
+   */
+  private async executeCrossDexAtomicArbitrage(
+    pool1Address: string,
+    pool2Address: string,
+    tokenAMint: string,
+    tokenBMint: string,
+    amountToTrade: Decimal,
+    direction: "pool1-to-pool2" | "pool2-to-pool1",
+    slippage: number,
+    isPool1Raydium: boolean,
+    isPool2Raydium: boolean
+  ): Promise<ArbitrageResult> {
+    const overallStartTime = Date.now();
+
+    try {
+      console.log("\n[CROSS-DEX] Building atomic transaction with Orca + Raydium");
+
+      // Determine order and types
+      const firstPool = direction === "pool1-to-pool2" ? pool1Address : pool2Address;
+      const secondPool = direction === "pool1-to-pool2" ? pool2Address : pool1Address;
+      const isFirstPoolRaydium = direction === "pool1-to-pool2" ? isPool1Raydium : isPool2Raydium;
+      const isSecondPoolRaydium = direction === "pool1-to-pool2" ? isPool2Raydium : isPool1Raydium;
+
+      const firstInputMint = tokenBMint; // USDC
+      const firstOutputMint = tokenAMint; // SOL
+      const secondInputMint = tokenAMint; // SOL
+      const secondOutputMint = tokenBMint; // USDC
+
+      console.log(`[CROSS-DEX] Swap 1: ${isFirstPoolRaydium ? 'Raydium' : 'Orca'} (${firstPool.slice(0, 8)}...)`);
+      console.log(`[CROSS-DEX] Swap 2: ${isSecondPoolRaydium ? 'Raydium' : 'Orca'} (${secondPool.slice(0, 8)}...)`);
+
+      // Get quotes and instructions for both swaps
+      const swap1Instructions: TransactionInstruction[] = [];
+      const swap2Instructions: TransactionInstruction[] = [];
+      let estimatedAmountOut1: BN;
+      let estimatedAmountOut2: BN;
+
+      // Build Swap 1 instructions
+      if (isFirstPoolRaydium) {
+        console.log("[CROSS-DEX] Building Raydium swap 1 instructions...");
+
+        if (!this.raydiumExecutor) {
+          throw new Error("Raydium executor not initialized");
+        }
+
+        // Get Raydium pool config
+        const poolConfig = PREDEFINED_POOLS.find(p => p.address === firstPool);
+        if (!poolConfig || !poolConfig.vault_a || !poolConfig.vault_b) {
+          throw new Error("Raydium pool config not found");
+        }
+
+        // Build Raydium swap instructions
+        const raydiumResult = await this.raydiumExecutor.buildRaydiumSwapInstructions(
+          firstPool,
+          poolConfig.vault_a,
+          poolConfig.vault_b,
+          amountToTrade,
+          firstInputMint === SOL_MINT ? "SOL" : "USDC",
+          slippage
+        );
+
+        estimatedAmountOut1 = this.decimalToBN(new Decimal(raydiumResult.quote.amountOut), this.getTokenDecimals(firstOutputMint));
+        swap1Instructions.push(...raydiumResult.instructions);
+
+        console.log(`[CROSS-DEX] Raydium swap 1: ${raydiumResult.instructions.length} instructions, output: ${raydiumResult.quote.amountOut}`);
+
+      } else {
+        console.log("[CROSS-DEX] Building Orca swap 1 instructions...");
+
+        await this.initializeOrcaSDK();
+        if (!this.whirlpoolContext || !this.whirlpoolClient) {
+          throw new Error("Failed to initialize Orca SDK");
+        }
+
+        const pool1Pubkey = new PublicKey(firstPool);
+        const whirlpool1 = await this.whirlpoolClient.getPool(pool1Pubkey);
+
+        const inputDecimals1 = this.getTokenDecimals(firstInputMint);
+        const amountInBN1 = this.decimalToBN(amountToTrade, inputDecimals1);
+        const inputMintPubkey1 = new PublicKey(firstInputMint);
+        const slippagePercentage = Percentage.fromDecimal(new Decimal(slippage));
+
+        const quote1 = await swapQuoteByInputToken(
+          whirlpool1,
+          inputMintPubkey1,
+          amountInBN1,
+          slippagePercentage,
+          ORCA_WHIRLPOOL_PROGRAM_ID,
+          this.whirlpoolContext.fetcher
+        );
+
+        estimatedAmountOut1 = quote1.estimatedAmountOut;
+
+        const swap1TxBuilder = await whirlpool1.swap(quote1, this.wallet.publicKey);
+        const swap1TxPayload = await swap1TxBuilder.compressIx(true);
+        swap1Instructions.push(...swap1TxPayload.instructions);
+      }
+
+      // Build Swap 2 instructions
+      if (isSecondPoolRaydium) {
+        console.log("[CROSS-DEX] Building Raydium swap 2 instructions...");
+
+        if (!this.raydiumExecutor) {
+          throw new Error("Raydium executor not initialized");
+        }
+
+        // Get Raydium pool config
+        const poolConfig = PREDEFINED_POOLS.find(p => p.address === secondPool);
+        if (!poolConfig || !poolConfig.vault_a || !poolConfig.vault_b) {
+          throw new Error("Raydium pool config not found");
+        }
+
+        // Convert estimatedAmountOut1 to Decimal
+        const amountInSwap2 = this.bnToDecimal(estimatedAmountOut1, this.getTokenDecimals(secondInputMint));
+
+        // Build Raydium swap instructions
+        const raydiumResult = await this.raydiumExecutor.buildRaydiumSwapInstructions(
+          secondPool,
+          poolConfig.vault_a,
+          poolConfig.vault_b,
+          amountInSwap2,
+          secondInputMint === SOL_MINT ? "SOL" : "USDC",
+          slippage
+        );
+
+        estimatedAmountOut2 = this.decimalToBN(new Decimal(raydiumResult.quote.amountOut), this.getTokenDecimals(secondOutputMint));
+        swap2Instructions.push(...raydiumResult.instructions);
+
+        console.log(`[CROSS-DEX] Raydium swap 2: ${raydiumResult.instructions.length} instructions, output: ${raydiumResult.quote.amountOut}`);
+
+      } else {
+        console.log("[CROSS-DEX] Building Orca swap 2 instructions...");
+
+        await this.initializeOrcaSDK();
+        if (!this.whirlpoolContext || !this.whirlpoolClient) {
+          throw new Error("Failed to initialize Orca SDK");
+        }
+
+        const pool2Pubkey = new PublicKey(secondPool);
+        const whirlpool2 = await this.whirlpoolClient.getPool(pool2Pubkey);
+
+        const inputMintPubkey2 = new PublicKey(secondInputMint);
+        const slippagePercentage = Percentage.fromDecimal(new Decimal(slippage));
+
+        const quote2 = await swapQuoteByInputToken(
+          whirlpool2,
+          inputMintPubkey2,
+          estimatedAmountOut1,
+          slippagePercentage,
+          ORCA_WHIRLPOOL_PROGRAM_ID,
+          this.whirlpoolContext.fetcher
+        );
+
+        estimatedAmountOut2 = quote2.estimatedAmountOut;
+
+        const swap2TxBuilder = await whirlpool2.swap(quote2, this.wallet.publicKey);
+        const swap2TxPayload = await swap2TxBuilder.compressIx(true);
+        swap2Instructions.push(...swap2TxPayload.instructions);
+      }
+
+      // Combine instructions into single transaction
+      console.log("[CROSS-DEX] Combining instructions into atomic transaction...");
+
+      let recentBlockhash;
+      if (this.rpcManager) {
+        recentBlockhash = await this.rpcManager.executeWithRetry(
+          (conn) => conn.getLatestBlockhash("confirmed"),
+          "getLatestBlockhash"
+        );
+      } else {
+        recentBlockhash = await this.connection.getLatestBlockhash("confirmed");
+      }
+
+      const computeUnits = 600000; // Increased for cross-DEX
+      const priorityFeeIx = ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: this.maxPriorityFee,
+      });
+      const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
+        units: computeUnits,
+      });
+
+      const message = new TransactionMessage({
+        payerKey: this.wallet.publicKey,
+        recentBlockhash: recentBlockhash.blockhash,
+        instructions: [
+          computeLimitIx,
+          priorityFeeIx,
+          ...swap1Instructions,
+          ...swap2Instructions,
+        ],
+      }).compileToV0Message();
+
+      const transaction = new VersionedTransaction(message);
+      transaction.sign([this.wallet]);
+
+      console.log(`[CROSS-DEX] Sending atomic transaction with ${swap1Instructions.length + swap2Instructions.length + 2} instructions...`);
+
+      const signature = await this.sendTransactionWithRetry(transaction, {
+        skipPreflight: false,
+        maxRetries: 0,
+      });
+
+      const executionTime = Date.now() - overallStartTime;
+
+      const outputDecimals2 = this.getTokenDecimals(secondOutputMint);
+      const finalAmountOut = this.bnToDecimal(estimatedAmountOut2, outputDecimals2);
+      const expectedProfit = finalAmountOut.minus(amountToTrade);
+      const expectedProfitPct = expectedProfit.div(amountToTrade).mul(100).toNumber();
+
+      console.log("\n" + "=".repeat(70));
+      console.log("CROSS-DEX ATOMIC ARBITRAGE COMPLETE");
+      console.log("=".repeat(70));
+      console.log(`Bundle Signature: ${signature}`);
+      console.log(`Explorer: https://solscan.io/tx/${signature}`);
+      console.log(`Profit: ${expectedProfit.toFixed(6)} USDC (${expectedProfitPct.toFixed(4)}%)`);
+      console.log(`Execution time: ${executionTime}ms`);
+      console.log("=".repeat(70));
+
+      return {
+        success: true,
+        bundleSignature: signature,
+        swap1: {
+          success: true,
+          signature: signature,
+          amountIn: amountToTrade.toString(),
+          amountOut: this.bnToDecimal(estimatedAmountOut1, this.getTokenDecimals(firstOutputMint)).toString(),
+          executionTime: executionTime,
+        },
+        swap2: {
+          success: true,
+          signature: signature,
+          amountIn: this.bnToDecimal(estimatedAmountOut1, this.getTokenDecimals(firstOutputMint)).toString(),
+          amountOut: finalAmountOut.toString(),
+          executionTime: executionTime,
+        },
+        profit: expectedProfit,
+        profitPct: expectedProfitPct,
+        totalExecutionTime: executionTime,
+      };
+
+    } catch (error: any) {
+      const executionTime = Date.now() - overallStartTime;
+      console.error(`[CROSS-DEX] Error: ${error.message}`);
+
+      return {
+        success: false,
+        error: `Cross-DEX atomic arbitrage failed: ${error.message}. Use SINGLE mode as fallback.`,
+        totalExecutionTime: executionTime,
+      };
+    }
+  }
+
+  /**
+   * Execute sequential swaps (SINGLE mode) - two separate transactions
+   * Used for cross-DEX arbitrage that exceeds transaction size limits
+   */
+  private async executeSequentialSwaps(
+    pool1Address: string,
+    pool2Address: string,
+    tokenAMint: string,
+    tokenBMint: string,
+    initialAmount: Decimal,
+    direction: "pool1-to-pool2" | "pool2-to-pool1",
+    slippage: number,
+    skipValidation: boolean = false
+  ): Promise<ArbitrageResult> {
+    const overallStartTime = Date.now();
+    console.log("\n" + "=".repeat(70));
+    console.log("EXECUTING SEQUENTIAL SWAPS (SINGLE MODE)");
+    console.log("MEV Protection: " + (this.usePrivateTx ? "ENABLED" : "DISABLED"));
+    console.log("=".repeat(70));
+
+    try {
+      // Determine swap direction and pools based on signal direction
+      let firstPool: string;
+      let secondPool: string;
+      let firstInputMint: string;
+      let firstOutputMint: string;
+      let secondInputMint: string;
+      let secondOutputMint: string;
+
+      // Match the logic from ATOMIC mode - always start with USDC, buy SOL, sell SOL for USDC
+      if (direction === "pool1-to-pool2") {
+        firstPool = pool1Address;
+        secondPool = pool2Address;
+        firstInputMint = tokenBMint; // USDC
+        firstOutputMint = tokenAMint; // SOL
+        secondInputMint = tokenAMint; // SOL
+        secondOutputMint = tokenBMint; // USDC
+      } else {
+        firstPool = pool2Address;
+        secondPool = pool1Address;
+        firstInputMint = tokenBMint; // USDC
+        firstOutputMint = tokenAMint; // SOL
+        secondInputMint = tokenAMint; // SOL
+        secondOutputMint = tokenBMint; // USDC
+      }
+
+      console.log(`\n[SINGLE] Swap 1: ${firstInputMint === tokenBMint ? "USDC" : "SOL"} -> ${firstOutputMint === tokenBMint ? "USDC" : "SOL"} on ${firstPool.slice(0, 8)}...`);
+      console.log(`[SINGLE]   Amount: ${initialAmount.toString()} ${firstInputMint === tokenBMint ? "USDC" : "SOL"}`);
+
+      // Execute first swap: USDC -> SOL
+      const swap1StartTime = Date.now();
+      const swap1Result = await this.executeSingleSwap(
+        firstPool,
+        firstInputMint,
+        firstOutputMint,
+        initialAmount,
+        slippage,
+        skipValidation
+      );
+      const swap1Time = Date.now() - swap1StartTime;
+
+      if (!swap1Result.success) {
+        console.log(`[SINGLE] ✗ Swap 1 failed: ${swap1Result.error}`);
+        return {
+          success: false,
+          error: `Swap 1 failed: ${swap1Result.error}`,
+          totalExecutionTime: Date.now() - overallStartTime,
+        };
+      }
+
+      console.log(`[SINGLE] ✓ Swap 1 completed: ${swap1Result.signature}`);
+      console.log(`[SINGLE]   Output: ${swap1Result.amountOut}`);
+      console.log(`[SINGLE]   Time: ${swap1Time}ms`);
+
+      // Execute second swap with output from first swap: SOL -> USDC
+      const secondSwapAmount = new Decimal(swap1Result.amountOut || "0");
+
+      console.log(`\n[SINGLE] Swap 2: ${secondInputMint === tokenBMint ? "USDC" : "SOL"} -> ${secondOutputMint === tokenBMint ? "USDC" : "SOL"} on ${secondPool.slice(0, 8)}...`);
+      console.log(`[SINGLE]   Amount: ${secondSwapAmount.toString()} ${secondInputMint === tokenBMint ? "USDC" : "SOL"}`);
+
+      const swap2StartTime = Date.now();
+      const swap2Result = await this.executeSingleSwap(
+        secondPool,
+        secondInputMint,
+        secondOutputMint,
+        secondSwapAmount,
+        slippage,
+        skipValidation
+      );
+      const swap2Time = Date.now() - swap2StartTime;
+
+      if (!swap2Result.success) {
+        console.log(`[SINGLE] ✗ Swap 2 failed: ${swap2Result.error}`);
+        console.log(`[SINGLE] ⚠️  Partial execution - Swap 1 succeeded but Swap 2 failed`);
+        console.log(`[SINGLE] 🔄 Attempting recovery: reversing Swap 1...`);
+
+        // CRITICAL: Attempt to recover by reversing Swap 1
+        try {
+          const recoveryResult = await this.executeSingleSwap(
+            firstPool, // Reverse direction: sell back on same pool
+            firstOutputMint, // What we got from Swap 1 (SOL)
+            firstInputMint, // What we started with (USDC)
+            new Decimal(swap1Result.amountOut || "0"),
+            slippage,
+            true // skipValidation = true for emergency recovery
+          );
+
+          if (recoveryResult.success) {
+            console.log(`[SINGLE] ✓ Recovery successful: ${recoveryResult.signature}`);
+            console.log(`[SINGLE]   Recovered: ${recoveryResult.amountOut} ${firstInputMint === tokenBMint ? "USDC" : "SOL"}`);
+            const netLoss = new Decimal(swap1Result.amountIn || "0").minus(new Decimal(recoveryResult.amountOut || "0"));
+            return {
+              success: false,
+              error: `Swap 2 failed but RECOVERED via reverse Swap 1. Net loss: ${netLoss.toString()}`,
+              totalExecutionTime: Date.now() - overallStartTime,
+            };
+          } else {
+            console.log(`[SINGLE] ✗ Recovery FAILED: ${recoveryResult.error}`);
+            console.log(`[SINGLE] ⚠️  CRITICAL: Funds stuck in ${firstOutputMint === tokenBMint ? "USDC" : "SOL"}`);
+          }
+        } catch (recoveryError: any) {
+          console.error(`[SINGLE] Recovery error: ${recoveryError.message}`);
+        }
+
+        return {
+          success: false,
+          error: `Swap 2 failed: ${swap2Result.error} (Partial execution - check wallet for stuck funds)`,
+          totalExecutionTime: Date.now() - overallStartTime,
+        };
+      }
+
+      console.log(`[SINGLE] ✓ Swap 2 completed: ${swap2Result.signature}`);
+      console.log(`[SINGLE]   Output: ${swap2Result.amountOut}`);
+      console.log(`[SINGLE]   Time: ${swap2Time}ms`);
+
+      // Calculate profit
+      const finalAmountOut = new Decimal(swap2Result.amountOut || "0");
+      const profit = finalAmountOut.minus(initialAmount);
+
+      console.log("\n" + "=".repeat(70));
+      console.log("SEQUENTIAL SWAPS COMPLETE");
+      console.log(`Total execution time: ${Date.now() - overallStartTime}ms`);
+      console.log(`Net profit: ${profit.toString()} USDC`);
+      console.log("=".repeat(70));
+
+      return {
+        success: true,
+        bundleSignature: `${swap1Result.signature}, ${swap2Result.signature}`,
+        swap1: swap1Result,
+        swap2: swap2Result,
+        profit: profit,
+        totalExecutionTime: Date.now() - overallStartTime,
+      };
+    } catch (error: any) {
+      console.error(`[SINGLE] Sequential swap error: ${error.message}`);
+      return {
+        success: false,
+        error: error.message,
+        totalExecutionTime: Date.now() - overallStartTime,
       };
     }
   }

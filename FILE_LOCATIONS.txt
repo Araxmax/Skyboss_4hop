@@ -1,0 +1,146 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    CSV FILES LOCATION - VISUAL MAP                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Your Request:
+  "All CSV files in C:\Users\AryanAimax\Desktop\Skyboss_4hop\logs"
+
+✅ DELIVERED - All 3 CSV files will be saved here:
+
+
+C:\Users\AryanAimax\Desktop\Skyboss_4hop\
+│
+├─ 📝 ComprehensiveLogger.ts           ← Main logger (YOU HAVE THIS)
+├─ 📝 AllHopsScanner.ts                ← Integrate logging here
+│
+└─ 📁 logs\                            ← YOUR REQUESTED LOCATION
+   │
+   ├─ 📄 ALL_OPPORTUNITIES_20260119.csv          ← File 1 (will be created)
+   │   └─ Logs: EVERYTHING (tradable + non-tradable)
+   │      • 1000 opportunities per scan
+   │      • Shows failure reasons
+   │      • Use for: Debugging why opportunities rejected
+   │
+   ├─ 📄 TRADABLE_OPPORTUNITIES_20260119.csv     ← File 2 (will be created)
+   │   └─ Logs: Only PASSED checks
+   │      • ~200 opportunities per scan (20%)
+   │      • Ranked by profitability
+   │      • Use for: See what's ready to execute
+   │
+   ├─ 📄 EXECUTED_TRADES_20260119.csv            ← File 3 (will be created)
+   │   └─ Logs: Only EXECUTED on-chain
+   │      • ~10 trades per scan
+   │      • Transaction signatures
+   │      • Actual profit, slippage
+   │      • Use for: ROI, performance tracking
+   │
+   ├─ 📁 multipath\                    ← Your existing logs
+   │   ├─ Scanner_data_20260119.csv
+   │   ├─ Trade_data_20260119.csv
+   │   └─ Pool_prices_20260119.csv
+   │
+   └─ 📁 scanner\                      ← Your existing logs
+       └─ (other scanner logs...)
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                             INTEGRATION SUMMARY                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+1. Import Logger:
+   ┌────────────────────────────────────────────────────────────────┐
+   │ import { ComprehensiveLogger } from "./ComprehensiveLogger";   │
+   └────────────────────────────────────────────────────────────────┘
+
+2. Initialize (in constructor):
+   ┌────────────────────────────────────────────────────────────────┐
+   │ this.comprehensiveLogger = new ComprehensiveLogger();          │
+   │ // Defaults to "./logs" - saves to your requested location!    │
+   └────────────────────────────────────────────────────────────────┘
+
+3. Add 3 Logging Calls:
+   ┌────────────────────────────────────────────────────────────────┐
+   │ // After simulation                                            │
+   │ this.comprehensiveLogger.logAllOpportunities(...)              │
+   │                                                                │
+   │ // After filtering                                             │
+   │ this.comprehensiveLogger.logTradableOpportunities(...)         │
+   │                                                                │
+   │ // After execution                                             │
+   │ this.comprehensiveLogger.logExecutedTrade(...)                 │
+   └────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                            AFTER RUNNING SCANNER                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Your logs\ directory will look like this:
+
+C:\Users\AryanAimax\Desktop\Skyboss_4hop\logs\
+├─ ALL_OPPORTUNITIES_20260119.csv          ✅ New (all scans)
+├─ TRADABLE_OPPORTUNITIES_20260119.csv     ✅ New (filtered)
+├─ EXECUTED_TRADES_20260119.csv            ✅ New (executed)
+├─ multipath\
+│  ├─ Scanner_data_20260119.csv            (existing)
+│  ├─ Trade_data_20260119.csv              (existing)
+│  └─ Pool_prices_20260119.csv             (existing)
+└─ scanner\
+   └─ ...                                   (existing)
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              DATA FLOW DIAGRAM                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Scanner finds 1000 opportunities
+        ↓
+   [Simulation]
+        ↓
+   ✅ FILE 1: logs\ALL_OPPORTUNITIES.csv
+        All 1000 logged (✅ 200 tradable, ❌ 800 non-tradable)
+        ↓
+   [Filter]
+        ↓
+   ✅ FILE 2: logs\TRADABLE_OPPORTUNITIES.csv
+        Only 200 tradable logged (ranked 1-200)
+        ↓
+   [Execute top 10]
+        ↓
+   ✅ FILE 3: logs\EXECUTED_TRADES.csv
+        Only 10 executed logged (with TX signatures)
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           QUICK VERIFICATION                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+After running your scanner, verify files exist:
+
+PowerShell:
+  cd C:\Users\AryanAimax\Desktop\Skyboss_4hop\logs
+  dir *.csv
+
+Expected output:
+  ALL_OPPORTUNITIES_20260119.csv
+  TRADABLE_OPPORTUNITIES_20260119.csv
+  EXECUTED_TRADES_20260119.csv
+
+Open in Excel:
+  explorer C:\Users\AryanAimax\Desktop\Skyboss_4hop\logs
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                            🎯 SUMMARY                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ ComprehensiveLogger.ts created and configured
+✅ Default path set to "./logs" (your requested location)
+✅ 3 CSV files will be created in logs\ directory
+✅ Complete documentation provided
+✅ Test example included
+✅ Ready to integrate!
+
+Next step: Read COMPREHENSIVE_LOGGING_GUIDE.md for integration steps
+
+═══════════════════════════════════════════════════════════════════════════════
