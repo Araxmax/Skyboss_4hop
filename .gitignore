@@ -1,4 +1,4 @@
-.env 
+ 
 *.csv 
 node_modules/ 
 logs/ 
@@ -7,4 +7,5 @@ logs/
 .DS_Store 
 nul 
 .md
+
 .bat
