@@ -1,11 +1,12 @@
  
-*.csv 
-node_modules/ 
-logs/ 
-*.csv 
+#*.csv 
+#node_modules/ 
+#logs/ 
+#*.csv 
 .env 
-.DS_Store 
-nul 
-.md
+#.DS_Store 
+#nul 
+#.md
 
-.bat
+#.bat
+#node_modules
